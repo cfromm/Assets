@@ -37,6 +37,7 @@ public class GenerateStimulus : MonoBehaviour {
     {		
         yield return new WaitForSeconds(seconds);
         Destroy( thisStim );
+		gameManager.stimulus_present = false;
     }
 	
 	/// <summary>
@@ -45,6 +46,7 @@ public class GenerateStimulus : MonoBehaviour {
 	private void DestroyStim(){
 		if( thisStim != null ){
 			Destroy( thisStim );
+			gameManager.stimulus_present = false;
 		}		
 	}
 
@@ -59,7 +61,6 @@ public class GenerateStimulus : MonoBehaviour {
         stims = Stimulus.Letter.Split(',');
         if (Stimulus.Type == "t")  //if new stimulus type is desired add to this section
         {
-
             stimComponent = thisStim.GetComponent<TextMesh>();
             stimComponent.text = stims[Random.Range(0, stims.Length)];
             stimComponent.color = new Color (0f, 0f, 0f, Random.Range(col_low, col_high));
