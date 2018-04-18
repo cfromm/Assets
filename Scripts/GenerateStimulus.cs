@@ -15,6 +15,12 @@ public class GenerateStimulus : MonoBehaviour {
     public string[] stims;
     public GameManager gameManager;
     private UnityAction spawnStim;
+<<<<<<< HEAD
+=======
+	
+	private float col_low;
+	private float col_high;
+>>>>>>> origin/jeffsuzzz-patch
 
     private void Awake()
     {
@@ -50,6 +56,7 @@ public class GenerateStimulus : MonoBehaviour {
 		}		
 	}
 
+<<<<<<< HEAD
     
     public GameObject StimulusGenerator(float col_low, float col_high)
     {
@@ -59,12 +66,37 @@ public class GenerateStimulus : MonoBehaviour {
         thisStim.SetActive(true);
         TextMesh stimComponent = null;
         stims = Stimulus.Letter.Split(',');
+=======
+	/// <summary>
+	/// This function sets the color range of the stimulus
+	/// </summary>
+	public void GetColorRange(){
+        float level_size = Stimulus.Max_Color / Experiment.Num_Levels;
+        col_low = Stimulus.Max_Color - (gameManager.current_level) * level_size;
+        col_high = Stimulus.Max_Color - (gameManager.current_level + 1) * level_size;
+	}
+    
+    public GameObject StimulusGenerator()
+    {
+        GameObject thisStim = (GameObject)Instantiate(Resources.Load("TextStimulus"));
+		thisStim.gameObject.tag = "Stimulus";
+        thisStim.SetActive(true);
+        TextMesh stimComponent = null;	
+		GetColorRange();
+		
+        string[] stims = Stimulus.Letter.Split(',');
+>>>>>>> origin/jeffsuzzz-patch
         if (Stimulus.Type == "t")  //if new stimulus type is desired add to this section
         {
             stimComponent = thisStim.GetComponent<TextMesh>();
             stimComponent.text = stims[Random.Range(0, stims.Length)];
+<<<<<<< HEAD
             stimComponent.color = new Color (0f, 0f, 0f, Random.Range(col_low, col_high));
         }
+=======
+            stimComponent.color = new Color (0f, 0f, 0f, Random.Range(col_low, col_high));			
+		}
+>>>>>>> origin/jeffsuzzz-patch
         ////Pending input method that can be performed inside the helmet
         //if (Experiment.InputMethod == "m") 
         //{ for(int i = 0; i < stims.Length; i++)
@@ -83,7 +115,10 @@ public class GenerateStimulus : MonoBehaviour {
             print("Non-text stimulus not yet supported");
         }
 		
+<<<<<<< HEAD
 		// Destroy(obj, float) has the same effect
+=======
+>>>>>>> origin/jeffsuzzz-patch
 		StartCoroutine( RemoveAfterSeconds(Stimulus.Duration) );
         return thisStim;
     }
@@ -103,9 +138,16 @@ public class GenerateStimulus : MonoBehaviour {
 	/// </summary>
     public void StimulusEvent()
     {
+<<<<<<< HEAD
         thisStim = StimulusGenerator(gameManager.current_color[0], gameManager.current_color[1]);
 		
 		// after generating the stimulus, start waiting for user response
+=======
+        thisStim = StimulusGenerator();
+		
+		// after generating the stimulus, start waiting for user response
+		gameManager.current_color = thisStim.GetComponent<TextMesh>().color;
+>>>>>>> origin/jeffsuzzz-patch
 		GameObject response_obj = GameObject.Find("ResponseModule");
 		string requested = thisStim.GetComponent<TextMesh>().text;
 		response_obj.GetComponent<ResponseGetter>().GetResponseEvent(requested);
