@@ -22,17 +22,6 @@ public class GameManager : MonoBehaviour {
     public float[] current_color;
     public bool ExperimentComplete;
 
-=======
-    public int running_consecutive_correct = 0;	
-    public bool generate_state;	// if the scene is ready to generate the next stimulus
-    public bool fixation;
-    public int trial_number = 0;
-	public bool trial_success = false;	//whether the user response is correct
-	public bool stimulus_present = false;
-    public Color current_color;
-    public bool ExperimentComplete;
-	private float stimStartTime;
->>>>>>> origin/jeffsuzzz-patch
 
 	SMI.SMIEyeTrackingUnity smiInstance = null;
 	
@@ -44,27 +33,17 @@ public class GameManager : MonoBehaviour {
     Vector3 leftBasePoint;
     Vector3 rightBasePoint;
     Vector3 leftGazeDirection;
-<<<<<<< HEAD
     Vector3 rightGazeDirection;
 	
 	GameObject GenerateStimulus;
 	Vector3 stimulus_offset;
 	Vector3 stimulus_fixation;
 	char stimulus_letter;
-=======
-    Vector3 rightGazeDirection;	
-	Vector3 stimulus_offset;
-	Vector3 stimulus_fixation;
->>>>>>> origin/jeffsuzzz-patch
 	
 	[Tooltip("Press to start/stop recording SMI eye tracker data.")]
     [SerializeField]
     KeyCode trigger1 = KeyCode.Space;
 	FileStream streams;
-<<<<<<< HEAD
-=======
-	FileStream trialStreams;
->>>>>>> origin/jeffsuzzz-patch
 	StringBuilder stringBuilder = new StringBuilder();
 	String writeString;		
 	Byte[] writebytes;
@@ -86,10 +65,6 @@ public class GameManager : MonoBehaviour {
     {
         instance = null;
 		streams.Close();
-<<<<<<< HEAD
-=======
-		trialStreams.Close();
->>>>>>> origin/jeffsuzzz-patch
         Destroy(gameObject);	
     }
 
@@ -101,20 +76,12 @@ public class GameManager : MonoBehaviour {
     public void AcceptSignal()
     {
 		if( generate_state ){
-<<<<<<< HEAD
             if ( current_color.Length != 2 )
             { current_color = LevelCounter(); }
-=======
-			trial_number += 1;
->>>>>>> origin/jeffsuzzz-patch
 
 			EventManager.TriggerEvent("spawnStim");
 			generate_state = false;
 			stimulus_present = true;
-<<<<<<< HEAD
-=======
-			stimStartTime = Time.time * 1000;
->>>>>>> origin/jeffsuzzz-patch
 		}		
     }
 	
@@ -124,28 +91,18 @@ public class GameManager : MonoBehaviour {
 	/// <param name="isTrue">Does the user response match the stimulus</param>
 	public void UserResponse( bool isTrue ){
 		trial_success = isTrue;
-<<<<<<< HEAD
 		if( isTrue ){
-=======
-		if( trial_success ){
->>>>>>> origin/jeffsuzzz-patch
 			running_consecutive_correct += 1;
 			if( running_consecutive_correct == 3 ){
 				current_level += 1;
 				running_consecutive_correct = 0;
-<<<<<<< HEAD
 				current_color = LevelCounter();
-=======
->>>>>>> origin/jeffsuzzz-patch
 			}
 		} else{
 			running_consecutive_correct = 0;
 			if( current_level > 0 ){
 				current_level -= 1;
-<<<<<<< HEAD
 				current_color = LevelCounter();
-=======
->>>>>>> origin/jeffsuzzz-patch
 			}
 		}
 			
@@ -156,7 +113,6 @@ public class GameManager : MonoBehaviour {
 		
 		TrialCounter();
 	}
-<<<<<<< HEAD
 
 	/// <summary>
 	/// Change the range of the color of the stimulus based on the current level
@@ -183,32 +139,6 @@ public class GameManager : MonoBehaviour {
     public void TrialCounter()
     {
 		trial_number += 1;
-=======
-	
-	/// <summary>
-	/// This function sees if the total number of trials is matched
-	/// and records the trial result
-	/// </summary>
-	/// <remark>
-	/// trial: a stimulus generated and a user response counts as one trial
-	/// Trial#	Type	Color							Correct	Start		End
-	/// -----------------------------------------------------------------------
-	/// 1		t	RGBA(0.000, 0.000, 0.000, 0.925)	True	1224.965	4691.935
-	/// </remark>
-    public void TrialCounter()
-    {		
-		stringBuilder.Length = 0;
-        stringBuilder.Append(
-			trial_number + "\t\t" + Stimulus.Type + "\t" + current_color + "\t" +
-			trial_success + "\t" + stimStartTime + "\t" + Time.time*1000 +
-			Environment.NewLine
-			);
-        writeString = stringBuilder.ToString();
-
-        writebytes = Encoding.ASCII.GetBytes(writeString);
-        trialStreams.Write(writebytes, 0, writebytes.Length);
-		
->>>>>>> origin/jeffsuzzz-patch
         if (trial_number < Experiment.Trials)
         {
             ExperimentComplete = false;					
@@ -232,14 +162,6 @@ public class GameManager : MonoBehaviour {
 		// create a file inside the folder based on the current time
 		String outFileName = Path.Combine(outputDir, DateTime.Now.ToString("HH-mm") + ".txt");
 		streams = new FileStream(outFileName, FileMode.Create, FileAccess.Write);
-<<<<<<< HEAD
-=======
-				
-		// create another file to record trial results
-		String trialOutput = Path.Combine(outputDir, DateTime.Now.ToString("Trail-HH-mm") + ".txt");
-		trialStreams = new FileStream(trialOutput, FileMode.Create, FileAccess.Write);
-		
->>>>>>> origin/jeffsuzzz-patch
 		WriteHeader();
     }
 
@@ -255,53 +177,22 @@ public class GameManager : MonoBehaviour {
     }
 
     /// <summary>
-<<<<<<< HEAD
     /// Append the header information to the output file.
     /// </summary>
     void WriteHeader()
     {
-=======
-    /// Append the header information to the output file and trial output file.
-    /// </summary>
-    void WriteHeader()
-    {
-		// output file
->>>>>>> origin/jeffsuzzz-patch
         stringBuilder.Length = 0;
         stringBuilder.Append(DateTime.Now.ToString() + "\t" +
             "The file contains the information of the headset's position and rotation, " +
             ",the eye tracker's information, and stimulus's information " + Environment.NewLine +
             "The coordinate system is in Unity's world coordinate." + Environment.NewLine
             );
-<<<<<<< HEAD
         stringBuilder.Append("--------------------------------------------" + Environment.NewLine
             );
         writeString = stringBuilder.ToString();
 
         writebytes = Encoding.ASCII.GetBytes(writeString);
         streams.Write(writebytes, 0, writebytes.Length);
-=======
-        stringBuilder.Append("-------------------------------------------------" +
-			Environment.NewLine
-            );
-        writeString = stringBuilder.ToString();
-        writebytes = Encoding.ASCII.GetBytes(writeString);
-        streams.Write(writebytes, 0, writebytes.Length);
-		
-		// trial output file
-		stringBuilder.Length = 0;
-		stringBuilder.Append(
-			"Trial#\t" + "Type\t" + "Color\t\t\t\t\t\t\t" + "Correct\t" +
-			"Start\t\t" + "End" + Environment.NewLine
-			);
-		stringBuilder.Append(
-			"-----------------------------------------------------------------------" + 
-			Environment.NewLine
-            );
-		writeString = stringBuilder.ToString();
-        writebytes = Encoding.ASCII.GetBytes(writeString);
-        trialStreams.Write(writebytes, 0, writebytes.Length);
->>>>>>> origin/jeffsuzzz-patch
     }
 
     /// <summary>
