@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class StimulusPositionUpdate : MonoBehaviour {
     SMI.SMIEyeTrackingUnity smiInstance = null;
-    public Vector3 cameraRaycast;
-    Vector3 leftGazeDirection;
-    Vector3 rightGazeDirection;
-    Vector3 stim_position;
+    Vector3 cameraRaycast;
 	Vector3 offsets;
 	
     // Use this for initialization
     void Start() {
         smiInstance = SMI.SMIEyeTrackingUnity.Instance;
 		offsets = new Vector3 (0f, 0f, 0f);
+		
+		cameraRaycast = smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast();
+        
+		offsets.x = Experiment.X_offset;
+		offsets.y =	Experiment.Y_offset;
+		offsets.z = Experiment.Z_offset;
+		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
+			transform.position = smiInstance.transform.position + cameraRaycast * 10;
+		}
     }
 
 
@@ -23,18 +29,10 @@ public class StimulusPositionUpdate : MonoBehaviour {
     /// </summary>
     void UpdateWithGazePosition()
     {
-        //leftGazeDirection = smiInstance.transform.rotation * smiInstance.smi_GetLeftGazeDirection();
-        //rightGazeDirection = smiInstance.transform.rotation * smiInstance.smi_GetRightGazeDirection();
         cameraRaycast = smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast();
-        //stim_position = (leftGazeDirection + rightGazeDirection)/2;
-        //transform.position = stim_position + smiInstance.transform.position + new Vector3 (Experiment.X_offset, Experiment.Y_offset, Experiment.Z_offset);
-    
-		offsets.x = Experiment.X_offset;
-		offsets.y =	Experiment.Y_offset;
-		offsets.z = Experiment.Z_offset;
+        
 		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
-            transform.position = smiInstance.transform.position + cameraRaycast * 10;// + new Vector3(Experiment.X_offset, Experiment.Y_offset, Experiment.Z_offset);
-            //transform.rotation = smiInstance.transform.rotation;
+			transform.position = smiInstance.transform.position + cameraRaycast * 10;
 		}
 		
 	}

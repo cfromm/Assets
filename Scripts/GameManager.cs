@@ -10,16 +10,17 @@ public class GameManager : MonoBehaviour {
     private GenerateStimulus StimScript;
     public static GameManager instance = null;
     public int current_level = 0;
-    public int running_consecutive_correct = 0;
-	
-	// true if the scene is ready to generate the next stimulus
-    public bool generate_state;	
+    public int running_consecutive_correct = 0;	
+    public bool generate_state;	// if the scene is ready to generate the next stimulus
     public bool fixation;
     //private bool response_match; //whether the user response is correct
     public int trial_number = 0;
-    public float[] current_color;
-    public bool ExperimentComplete;
-
+	public bool trial_success = false;	//whether the user response is correct
+	public bool stimulus_present = false;
+    public Color current_color;
+	public string current_text;
+    public bool ExperimentComplete = false;
+	private float stimStartTime;
 
 	SMI.SMIEyeTrackingUnity smiInstance = null;
 	
@@ -31,17 +32,15 @@ public class GameManager : MonoBehaviour {
     Vector3 leftBasePoint;
     Vector3 rightBasePoint;
     Vector3 leftGazeDirection;
-    Vector3 rightGazeDirection;
-	
-	GameObject GenerateStimulus;
+    Vector3 rightGazeDirection;	
 	Vector3 stimulus_offset;
 	Vector3 stimulus_fixation;
-	char stimulus_letter;
 	
 	[Tooltip("Press to start/stop recording SMI eye tracker data.")]
     [SerializeField]
     KeyCode trigger1 = KeyCode.Space;
 	FileStream streams;
+	FileStream trialStreams;
 	StringBuilder stringBuilder = new StringBuilder();
 	String writeString;		
 	Byte[] writebytes;
@@ -59,10 +58,14 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+	/// <summary>	
+	/// Close the file streams
+	/// </summary>
     private void OnApplicationQuit()
     {
         instance = null;
 		streams.Close();
+		trialStreams.Close();
         Destroy(gameObject);	
     }
 
@@ -74,72 +77,73 @@ public class GameManager : MonoBehaviour {
     public void AcceptSignal()
     {
 		if( generate_state ){
-            if ( current_color.Length != 2 )
-            { current_color = LevelCounter(); }
+			trial_number += 1;
 
 			EventManager.TriggerEvent("spawnStim");
 			generate_state = false;
+			stimulus_present = true;
+			stimStartTime = Time.time * 1000;
 		}		
     }
 	
 	/// <summary>
-	/// This function is called when the user answers
+	/// This function is called after the user answers
 	/// </summary>
 	/// <param name="isTrue">Does the user response match the stimulus</param>
 	public void UserResponse( bool isTrue ){
-
-		if( isTrue ){
+		trial_success = isTrue;
+		if( trial_success ){
 			running_consecutive_correct += 1;
 			if( running_consecutive_correct == 3 ){
 				current_level += 1;
 				running_consecutive_correct = 0;
-				current_color = LevelCounter();
 			}
 		} else{
 			running_consecutive_correct = 0;
 			if( current_level > 0 ){
 				current_level -= 1;
-				current_color = LevelCounter();
 			}
 		}
 			
 		// Destroy the stimulus and set generate_state back to true
 		EventManager.TriggerEvent("DestroyStim");
 		generate_state = true;
+		stimulus_present = false;
 		
 		TrialCounter();
 	}
-
-	/// <summary>
-	/// Change the range of the color of the stimulus based on the current level
-	/// Should be called only if the level changes
-	/// </summary>
-    public float[] LevelCounter()
-    {
-        float[] color_range = new float[2];
-
-        float level_size = Stimulus.Max_Color / Experiment.Num_Levels;
-        color_range[1] = Stimulus.Max_Color - (current_level) * level_size;
-        color_range[0] = Stimulus.Max_Color - (current_level + 1) * level_size;
-        //Debug.Log("Current color range is " + "(" + color_range[0] + " , " + color_range[1] + ")");
-        return color_range;
-    }
 	
 	/// <summary>
 	/// This function sees if the total number of trials is matched
-	/// If so, close the application???
+	/// and records the trial result
 	/// </summary>
 	/// <remark>
 	/// trial: a stimulus generated and a user response counts as one trial
+	/// Trial#	Start		End			Correct	Type	Text	Color							
+	/// -----------------------------------------------------------------------
+	/// 1		22224.89	23622.57	True	t		F		RGBA(0.000, 0.000, 0.000, 0.965)
 	/// </remark>
     public void TrialCounter()
-    {
-		trial_number += 1;
-        if (trial_number < Experiment.Trials)
+    {		
+		stringBuilder.Length = 0;
+		if( Stimulus.Type.Equals("t") ){
+			stringBuilder.Append(
+				trial_number + "\t\t" + stimStartTime  + "\t" + Time.time*1000 + "\t" +
+				trial_success + "\t" + Stimulus.Type + "\t\t" + current_text + "\t\t" +
+				current_color + Environment.NewLine
+			);
+		}
+        
+        writeString = stringBuilder.ToString();
+        writebytes = Encoding.ASCII.GetBytes(writeString);
+        trialStreams.Write(writebytes, 0, writebytes.Length);
+		
+        if (trial_number >= Experiment.Trials)
         {
-            ExperimentComplete = false;					
+            ExperimentComplete = true;
+			Debug.Log("Experiment Complete.");			
         }
-        else { ExperimentComplete = true; }
+        else { ExperimentComplete = false; }
     }
 
 
@@ -152,12 +156,17 @@ public class GameManager : MonoBehaviour {
 		smiInstance = SMI.SMIEyeTrackingUnity.Instance;
 
 		// create a folder based on "SaveLocation" from Json file and today's date
-		String outputDir = Path.Combine(Experiment.SaveLocation, DateTime.Now.ToString("dd-MM-yyyy") );
+		String outputDir = Path.Combine(Experiment.SaveLocation, DateTime.Now.ToString("MM-dd-yyyy") );
 		Directory.CreateDirectory( outputDir );	
 
 		// create a file inside the folder based on the current time
 		String outFileName = Path.Combine(outputDir, DateTime.Now.ToString("HH-mm") + ".txt");
 		streams = new FileStream(outFileName, FileMode.Create, FileAccess.Write);
+				
+		// create another file to record trial results
+		String trialOutput = Path.Combine(outputDir, DateTime.Now.ToString("Trail-HH-mm") + ".txt");
+		trialStreams = new FileStream(trialOutput, FileMode.Create, FileAccess.Write);
+		
 		WriteHeader();
     }
 
@@ -173,22 +182,44 @@ public class GameManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Append the header information to the output file.
+    /// Append the header information to the output file and trial output file.
     /// </summary>
     void WriteHeader()
     {
+		// output file
         stringBuilder.Length = 0;
         stringBuilder.Append(DateTime.Now.ToString() + "\t" +
             "The file contains the information of the headset's position and rotation, " +
             ",the eye tracker's information, and stimulus's information " + Environment.NewLine +
             "The coordinate system is in Unity's world coordinate." + Environment.NewLine
             );
-        stringBuilder.Append("--------------------------------------------" + Environment.NewLine
+        stringBuilder.Append("-------------------------------------------------" +
+			Environment.NewLine
             );
         writeString = stringBuilder.ToString();
-
         writebytes = Encoding.ASCII.GetBytes(writeString);
         streams.Write(writebytes, 0, writebytes.Length);
+		
+		// trial output file
+		stringBuilder.Length = 0;
+		if( Stimulus.Type.Equals("t") ){					
+			stringBuilder.Append(
+				"Trial#\t" + "Start\t\t" + "End\t\t\t"  + "Correct\t" +
+				"Type\t" + "Text\t" + "Color\t\t\t\t\t\t\t" + Environment.NewLine
+			);
+			stringBuilder.Append(
+				"-----------------------------------------------------------------------" + 
+				Environment.NewLine
+			);			
+		} else{
+			stringBuilder.Append(
+				"Other types are not yet supported."
+			);
+		}
+		writeString = stringBuilder.ToString();
+		writebytes = Encoding.ASCII.GetBytes(writeString);
+		trialStreams.Write(writebytes, 0, writebytes.Length);
+		
     }
 
     /// <summary>
@@ -196,20 +227,24 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     /// <remarks>
     /// Each time the method will generate:
-    /// Time Stamp: milliseconds	User's Position: (x, y, z)	User's Rotation: (x, y, z)
-    /// cameraRaycast: (-0.0768, -0.3463, 0.935)	binocularPor: (1073.616, 614.5098)	 ipd: 0.0678889	leftPor: (1097.505, 605.5203)	rightPor: (1049.728, 623.4992)	
-    /// leftBasePoint: (0.7451017, 1.118986, 2.374621)	rightBasePoint: (0.8137214, 1.124029, 2.380525)	
-    /// leftGazeDirection: (-0.02443469, -0.3211047, 0.946727)	rightGazeDirection: (-0.1286347, -0.3623178, 0.9231351)
-    /// Number of stimulus: 1	Type: t	Letter: E	Color: red	stimulus offset: (x, y, z)	stimulus fixation: (x, y, z)
+    /// Time Stamp: 14360.88	User's Position: (0.8, 1.2, 2.4)	User's Rotation: (352.8, 262.3, 359.4)
+	/// cameraRaycast: (-0.919, -0.2204, -0.3269)	binocularPor: (904.5, 750.5)	 ipd: 0.06165263	leftPor: (944.4, 759.9)	rightPor: (864.7, 741.1)
+	/// leftBasePoint: (0.8, 1.2, 2.4)	rightBasePoint: (0.8, 1.2, 2.4)
+	/// leftGazeDirection: (-0.9, -0.2, -0.3)	rightGazeDirection: (-0.9, -0.2, -0.4)
+	/// Trial number: 2	Stimulus present: False	Type: t	level: 0
 	/// </remarks>
     void WriteFile()
     {
         stringBuilder.Length = 0;
+		
+		// User's info
         stringBuilder.Append(
             "Time Stamp: " + Time.time * 1000 + "\t" +
             "User's Position: " + smiInstance.transform.position + "\t" +
-            "User's Rotation: " + smiInstance.transform.eulerAngles + Environment.NewLine
+            "User's Rotation: " + smiInstance.transform.eulerAngles  + Environment.NewLine
             );
+			
+		// SMI eye tracker's info
         stringBuilder.Append(
             "cameraRaycast: " + cameraRaycast.ToString("G4") + "\t" +
             "binocularPor: " + binocularPor + "\t" +
@@ -219,28 +254,23 @@ public class GameManager : MonoBehaviour {
             );   		
 		stringBuilder.Append(
             "leftBasePoint: " + leftBasePoint + "\t" +
-            "rightBasePoint: " + rightBasePoint + Environment.NewLine
+            "rightBasePoint: " + rightBasePoint  + Environment.NewLine
             );
 		stringBuilder.Append(
             "leftGazeDirection: " + leftGazeDirection + "\t" +
             "rightGazeDirection: " + rightGazeDirection + Environment.NewLine
             );
 		
-        stimulus_offset.x = Experiment.X_offset;
-		stimulus_offset.y = Experiment.Y_offset;
-		stimulus_offset.z = Experiment.Z_offset;
-		stimulus_fixation.x = Experiment.X_Fixation;
-		stimulus_fixation.y = Experiment.Y_Fixation;
-		stimulus_fixation.z = Experiment.Z_Fixation;
+		// Stimulus info
 		stringBuilder.Append(
-			"Number of trial: " + trial_number + "\t" +
+			"Trial number: " + trial_number + "\t" +
+			"Stimulus present: " + stimulus_present + "\t" +
 			"Type: " + Stimulus.Type + "\t" +
-			"Letter: " + Stimulus.Letter + "\t" +
-			"Max Color: " + Stimulus.Max_Color + "\t" +
-            "stimulus offset: " + stimulus_offset + "\t" +
-			"stimulus fixation: " + stimulus_fixation + Environment.NewLine
+			"level: " + current_level + "\t" +
+			"Text: " + current_text + "\t" +
+			Environment.NewLine
             );
-			
+		
         writeString = stringBuilder.ToString();
         writebytes = Encoding.ASCII.GetBytes(writeString);
         streams.Write(writebytes, 0, writebytes.Length);
