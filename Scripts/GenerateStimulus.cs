@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// Test comment for versioning 
+
 /// <summary>
 /// This class generates and draws a stimulus
 /// </summary>
@@ -122,6 +124,8 @@ public class GenerateStimulus : MonoBehaviour {
 		
 		// after generating the stimulus, start waiting for user response	
 		string requested = thisStim.GetComponent<TextMesh>().text;
+
+        //Audio input goes here
 		gameManager.current_text = requested;
 		gameManager.current_color = thisStim.GetComponent<TextMesh>().color;
 		GameObject response_obj = GameObject.Find("ResponseModule");
