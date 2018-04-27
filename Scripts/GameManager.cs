@@ -21,6 +21,10 @@ public class GameManager : MonoBehaviour {
 	public string current_text;
     public bool ExperimentComplete = false;
 	private float stimStartTime;
+    public AudioSource[] sounds;
+    public AudioSource success_sound;
+    public AudioSource fail_sound;
+    
 
 	SMI.SMIEyeTrackingUnity smiInstance = null;
 	
@@ -91,6 +95,9 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="isTrue">Does the user response match the stimulus</param>
 	public void UserResponse( bool isTrue ){
+        sounds = GetComponents<AudioSource>();
+        success_sound = sounds[0];
+        fail_sound = sounds[1];
 		trial_success = isTrue;
 		if( trial_success ){
 			running_consecutive_correct += 1;
@@ -98,11 +105,13 @@ public class GameManager : MonoBehaviour {
 				current_level += 1;
 				running_consecutive_correct = 0;
 			}
+            success_sound.Play();
 		} else{
 			running_consecutive_correct = 0;
 			if( current_level > 0 ){
 				current_level -= 1;
 			}
+            fail_sound.Play();
 		}
 			
 		// Destroy the stimulus and set generate_state back to true

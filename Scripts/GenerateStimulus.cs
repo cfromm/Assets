@@ -125,8 +125,9 @@ public class GenerateStimulus : MonoBehaviour {
 		// after generating the stimulus, start waiting for user response	
 		string requested = thisStim.GetComponent<TextMesh>().text;
 
-        //Audio input goes here
-		gameManager.current_text = requested;
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
+        gameManager.current_text = requested;
 		gameManager.current_color = thisStim.GetComponent<TextMesh>().color;
 		GameObject response_obj = GameObject.Find("ResponseModule");
 		response_obj.GetComponent<ResponseGetter>().GetResponseEvent(requested);
