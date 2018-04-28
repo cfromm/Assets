@@ -134,7 +134,9 @@ public class SteamVR_LaserPointer : MonoBehaviour
         }
         else
         {
-            pointer.transform.localScale = new Vector3(thickness, thickness, dist);
+			// This makes the pointer keep triggering in and out,
+			// thus makes it useless to use OnTriggerEnter() and OnPointerIn()
+            //pointer.transform.localScale = new Vector3(thickness, thickness, dist);
         }
         pointer.transform.localPosition = new Vector3(0f, 0f, dist/2f);
     }
