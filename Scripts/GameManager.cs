@@ -21,9 +21,8 @@ public class GameManager : MonoBehaviour {
 	public string current_text;
     public bool ExperimentComplete = false;
 	private float stimStartTime;
-    public AudioSource[] sounds;
-    public AudioSource success_sound;
-    public AudioSource fail_sound;
+    public AudioClip success_sound;
+    public AudioClip fail_sound;
     
 
 	SMI.SMIEyeTrackingUnity smiInstance = null;
@@ -94,55 +93,89 @@ public class GameManager : MonoBehaviour {
 	/// This function is called after the user answers
 	/// </summary>
 	/// <param name="isTrue">Does the user response match the stimulus</param>
-	public void UserResponse( bool isTrue ){
-        sounds = GetComponents<AudioSource>();
-        success_sound = sounds[0];
-        fail_sound = sounds[1];
+	public void UserResponse( bool isTrue )
+	{
 		trial_success = isTrue;
-		if( trial_success ){
-			running_consecutive_correct += 1;
-			if( running_consecutive_correct == 3 ){
+		if( trial_success )
+		{
+			TrialCounter(1);
+		} else
+		{
+			TrialCounter(0);
+		}
+	}
+	
+	/// <summary>
+	/// This function is called after the user answers
+	/// </summary>
+	/// <param name="isTrue">Does the user response match the stimulus</param>
+	/// <param name="isPoint">Does the user point at the stimulus</param>
+	public void UserResponse( bool isTrue, bool isPoint )
+	{
+		trial_success = isTrue && isPoint;      
+		if( trial_success )
+		{
+			TrialCounter(2);
+		} else if( isTrue )
+		{
+			TrialCounter(1);
+		} else
+		{
+			TrialCounter(0);
+		}
+	}	
+	
+	/// <summary>
+	/// This function records the trial result
+	/// </summary>
+	/// <param name="score">How many score does the user get from this trial</param>
+	/// <remark>
+	/// trial: a stimulus generated and a user response counts as one trial
+	/// Trial#	Start		End			Correct	Exp.type	Sti.type	Res.type	Text	Color							
+	/// -----------------------------------------------------------------------
+	/// 1		1241.806	4618.559	False	a			t			m			R		RGBA(0.000, 0.000, 0.000, 0.796)
+	/// </remark>
+    public void TrialCounter( int score )
+    {	
+		AudioSource sounds = GetComponent<AudioSource>();		
+		if( score > 0 )
+		{
+			running_consecutive_correct += score;
+			if( running_consecutive_correct >= 3 )
+			{
 				current_level += 1;
-				running_consecutive_correct = 0;
+				running_consecutive_correct -= 3;
 			}
-            success_sound.Play();
-		} else{
+			sounds.clip = success_sound;
+            sounds.Play();
+		} else
+		{
 			running_consecutive_correct = 0;
-			if( current_level > 0 ){
+			if( current_level > 0 )
+			{
 				current_level -= 1;
 			}
-            fail_sound.Play();
+            sounds.clip = fail_sound;
+            sounds.Play();
 		}
 			
 		// Destroy the stimulus and set generate_state back to true
 		EventManager.TriggerEvent("DestroyStim");
 		generate_state = true;
 		stimulus_present = false;
-		
-		TrialCounter();
-	}
 	
-	/// <summary>
-	/// This function sees if the total number of trials is matched
-	/// and records the trial result
-	/// </summary>
-	/// <remark>
-	/// trial: a stimulus generated and a user response counts as one trial
-	/// Trial#	Start		End			Correct	Type	Text	Color							
-	/// -----------------------------------------------------------------------
-	/// 1		22224.89	23622.57	True	t		F		RGBA(0.000, 0.000, 0.000, 0.965)
-	/// </remark>
-    public void TrialCounter()
-    {		
+		// Record the result of this trial
 		stringBuilder.Length = 0;
-		if( Stimulus.Type.Equals("t") ){
-			stringBuilder.Append(
+		if( Stimulus.Type.Equals("t") )
+		{
+			stringBuilder.Append
+			(
 				trial_number + "\t\t" + stimStartTime  + "\t" + Time.time*1000 + "\t" +
-				trial_success + "\t" + Stimulus.Type + "\t\t" + current_text + "\t\t" +
+				trial_success + "\t" + "a\t\t\t" + Stimulus.Type + "\t\t\t" + 
+				Experiment.InputMethod + "\t\t\t" + current_text + "\t\t" +
 				current_color + Environment.NewLine
 			);
-		}
-        
+		}   
         writeString = stringBuilder.ToString();
         writebytes = Encoding.ASCII.GetBytes(writeString);
         trialStreams.Write(writebytes, 0, writebytes.Length);
@@ -152,7 +185,6 @@ public class GameManager : MonoBehaviour {
             ExperimentComplete = true;
 			Debug.Log("Experiment Complete.");			
         }
-        else { ExperimentComplete = false; }
     }
 
 
@@ -214,7 +246,8 @@ public class GameManager : MonoBehaviour {
 		if( Stimulus.Type.Equals("t") ){					
 			stringBuilder.Append(
 				"Trial#\t" + "Start\t\t" + "End\t\t\t"  + "Correct\t" +
-				"Type\t" + "Text\t" + "Color\t\t\t\t\t\t\t" + Environment.NewLine
+				"Exp.type\t" + "Sti.type\t" + "Res.type\t" + 
+				"Text\t" + "Color\t\t\t\t\t\t\t" + Environment.NewLine
 			);
 			stringBuilder.Append(
 				"-----------------------------------------------------------------------" + 
@@ -240,7 +273,7 @@ public class GameManager : MonoBehaviour {
 	/// cameraRaycast: (-0.919, -0.2204, -0.3269)	binocularPor: (904.5, 750.5)	 ipd: 0.06165263	leftPor: (944.4, 759.9)	rightPor: (864.7, 741.1)
 	/// leftBasePoint: (0.8, 1.2, 2.4)	rightBasePoint: (0.8, 1.2, 2.4)
 	/// leftGazeDirection: (-0.9, -0.2, -0.3)	rightGazeDirection: (-0.9, -0.2, -0.4)
-	/// Trial number: 2	Stimulus present: False	Type: t	level: 0
+	/// Trial number: 2	Stimulus present: True	Experiment type: a	Stimulus type: t	Response type: m	level: 0	Text: P	
 	/// </remarks>
     void WriteFile()
     {
@@ -274,7 +307,9 @@ public class GameManager : MonoBehaviour {
 		stringBuilder.Append(
 			"Trial number: " + trial_number + "\t" +
 			"Stimulus present: " + stimulus_present + "\t" +
-			"Type: " + Stimulus.Type + "\t" +
+			"Experiment type: " + "a" + "\t" +
+			"Stimulus type: " + Stimulus.Type + "\t" +
+			"Response type: " + Experiment.InputMethod + "\t" +
 			"level: " + current_level + "\t" +
 			"Text: " + current_text + "\t" +
 			Environment.NewLine

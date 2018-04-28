@@ -48,8 +48,10 @@ public class GenerateStimulus : MonoBehaviour {
 	/// <summary>
 	/// This function destroys the current stimulus instantly
 	/// </summary>
-	private void DestroyStim(){
-		if( thisStim != null ){
+	private void DestroyStim()
+	{
+		if( thisStim != null )
+		{
 			Destroy( thisStim );
 			gameManager.stimulus_present = false;
 		}		
@@ -58,7 +60,8 @@ public class GenerateStimulus : MonoBehaviour {
 	/// <summary>
 	/// This function sets the color range of the stimulus
 	/// </summary>
-	public void GetColorRange(){
+	public void GetColorRange()
+	{
         float level_size = Stimulus.Max_Color / Experiment.Num_Levels;
         col_low = Stimulus.Max_Color - (gameManager.current_level) * level_size;
         col_high = Stimulus.Max_Color - (gameManager.current_level + 1) * level_size;
@@ -130,7 +133,7 @@ public class GenerateStimulus : MonoBehaviour {
         gameManager.current_text = requested;
 		gameManager.current_color = thisStim.GetComponent<TextMesh>().color;
 		GameObject response_obj = GameObject.Find("ResponseModule");
-		response_obj.GetComponent<ResponseGetter>().GetResponseEvent(requested);
+		response_obj.GetComponent<ResponseGetter>().SetResponseEvent(requested);
     }
 
 }
