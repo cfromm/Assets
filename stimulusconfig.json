@@ -1,6 +1,6 @@
 {
   "Experiment_Params": {
-    "InputMethod" : "m",
+    "InputMethod" : "pc",
     "SaveLocation": "D:\\Data\\CBRecoveryVive\\",
     "Staircase": "3",
     "Trials": "20",
@@ -8,9 +8,9 @@
     "X_Fixation": "0",
     "Y_Fixation": "0",
     "Z_Fixation": "0",
-    "x_offset": "1",
-    "y_offset": "1",
-    "z_offset": "10",
+    "x_offset": "10",
+    "y_offset": "2",
+    "z_offset": "0",
     "Pause_time": "1"
   },
   "Stimulus_Params": {
