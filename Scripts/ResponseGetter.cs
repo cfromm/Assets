@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;    // For lambda-expression
 
+/// <summary>
+/// The main Response Getter class.
+/// Determines if the user response matches the stimulus.
+/// </summary>
 public class ResponseGetter : MonoBehaviour {
 
     public GameManager gameManager;
@@ -13,8 +17,9 @@ public class ResponseGetter : MonoBehaviour {
 	private bool isPoint;
 	private bool isTouch;
 	private bool[] user_direction;    // up, down, left, right		
-	
-    private void Awake()
+
+    // Use this for initialization
+    public void Start()
     {       
 		user_direction = new bool[4];
 		ResetMonitorParam();
@@ -30,11 +35,11 @@ public class ResponseGetter : MonoBehaviour {
 		isTouch = false;
 		System.Array.Clear(user_direction, 0, user_direction.Length);
 	}
-	
-	/// <summary>
-	/// Set up the desired string and start receiving user response/input.
-	/// </summary>
-	/// <param name="request">Stimulus direction or text.</param>
+
+    /// <summary>
+    /// Set up the desired string and start receiving user response.
+    /// </summary>
+    /// <param name="request">Stimulus direction or text.</param>
     public void SetResponseEvent( string request = null )
     {
 		// reset to prevent instant judge
@@ -44,17 +49,17 @@ public class ResponseGetter : MonoBehaviour {
     }
 	
 	/// <summary>
-	/// Set up isPoint for InputJudge.
+	/// This function tells if the user is pointing at the stimulus.
 	/// </summary>
 	public void GetPointResponse( bool isTrue )
 	{
 		isPoint = isTrue;
 	}
-	
-	/// <summary>
-	/// Set up isTouch for InputJudge.
-	/// </summary>
-	public void GetTouchResponse( bool isTrue )
+
+    /// <summary>
+    /// This function tells if the user clikced controller's pad.
+    /// </summary>
+    public void GetTouchResponse( bool isTrue )
 	{
 		isTouch = isTrue;
 	}

@@ -5,6 +5,10 @@ using System;
 using System.IO;
 using System.Text;
 
+/// <summary>
+/// This main Game Manager class.
+/// Connects other scripts and write output files of the experiment.
+/// </summary>
 public class GameManager : MonoBehaviour {
     private GameObject StimObject;
     private GenerateStimulus StimScript;
@@ -13,7 +17,6 @@ public class GameManager : MonoBehaviour {
     public int running_consecutive_correct = 0;	
     public bool generate_state;	// if the scene is ready to generate the next stimulus
     public bool fixation;
-    //private bool response_match; //whether the user response is correct
     public int trial_number = 0;
 	public bool trial_success = false;	//whether the user response is correct
 	public bool stimulus_present = false;
@@ -23,7 +26,6 @@ public class GameManager : MonoBehaviour {
 	private float stimStartTime;
     public AudioClip success_sound;
     public AudioClip fail_sound;
-    
 
 	SMI.SMIEyeTrackingUnity smiInstance = null;
 	
@@ -62,7 +64,7 @@ public class GameManager : MonoBehaviour {
     }
 
 	/// <summary>	
-	/// Close the file streams
+	/// Close the file streams.
 	/// </summary>
     private void OnApplicationQuit()
     {
@@ -72,10 +74,9 @@ public class GameManager : MonoBehaviour {
         Destroy(gameObject);	
     }
 
-
 	/// <summary>	
-	/// This function spawns stimulus if generate_state is true
-	/// It should only be called by controller's trigger button
+	/// This function spawns stimulus if generate_state is true.
+	/// It should be called by controller's trigger button.
 	/// </summary>
     public void AcceptSignal()
     {
@@ -86,13 +87,13 @@ public class GameManager : MonoBehaviour {
 			generate_state = false;
 			stimulus_present = true;
 			stimStartTime = Time.time * 1000;
-		}		
+        }		
     }
 	
 	/// <summary>
-	/// This function is called after the user answers
+	/// This function is called after the user answers.
 	/// </summary>
-	/// <param name="isTrue">Does the user response match the stimulus</param>
+	/// <param name="isTrue">Does the user response match the stimulus.</param>
 	public void UserResponse( bool isTrue )
 	{
 		trial_success = isTrue;
@@ -106,10 +107,10 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	/// <summary>
-	/// This function is called after the user answers
+	/// This function is called after the user answers.
 	/// </summary>
-	/// <param name="isTrue">Does the user response match the stimulus</param>
-	/// <param name="isPoint">Does the user point at the stimulus</param>
+	/// <param name="isTrue">Does the user response match the stimulus.</param>
+	/// <param name="isPoint">Does the user point at the stimulus.</param>
 	public void UserResponse( bool isTrue, bool isPoint )
 	{
 		trial_success = isTrue && isPoint;      
@@ -126,11 +127,11 @@ public class GameManager : MonoBehaviour {
 	}	
 	
 	/// <summary>
-	/// This function records the trial result
+	/// This function records the trial result.
 	/// </summary>
-	/// <param name="score">How many score does the user get from this trial</param>
+	/// <param name="score">How many score does the user get from this trial.</param>
 	/// <remark>
-	/// trial: a stimulus generated and a user response counts as one trial
+	/// trial: a stimulus generated and a user response counts as one trial.
 	/// Trial#	Start		End			Correct	Exp.type	Sti.type	Res.type	Text	Color							
 	/// -----------------------------------------------------------------------
 	/// 1		1241.806	4618.559	False	a			t			m			R		RGBA(0.000, 0.000, 0.000, 0.796)
@@ -187,7 +188,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-
+    // Use this for initialization
     public void Start()
     {
         StimObject = GameObject.Find("StimulusObject");

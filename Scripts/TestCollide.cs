@@ -28,14 +28,20 @@ public class TestCollide : MonoBehaviour {
 			this.gameObject.AddComponent<BoxCollider>();
 		}	
 	}
-	
-	void OnTriggerEnter(Collider collision)
+
+    /// <summary>
+    /// This function tells ResponseGetter the user points at it.
+    /// </summary>
+    void OnTriggerEnter(Collider collision)
 	{
 		//Debug.Log("OnTriggerEnter");		
 		response_script.GetPointResponse(true);
 	}
-	
-	void OnTriggerExit(Collider collision)
+
+    /// <summary>
+    /// This function tells ResponseGetter the user leaves it.
+    /// </summary>
+    void OnTriggerExit(Collider collision)
 	{
 		//Debug.Log("OnTriggerExit");		
 		response_script.GetPointResponse(false);

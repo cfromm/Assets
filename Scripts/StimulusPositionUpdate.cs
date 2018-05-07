@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class changes the position of the stimulus if needed.
+/// </summary>
 public class StimulusPositionUpdate : MonoBehaviour {
     SMI.SMIEyeTrackingUnity smiInstance = null;
     Vector3 cameraRaycast;

@@ -112,6 +112,9 @@ void start(){
 }
 */
 
+/// <summary>
+/// The main class which loads parameters from json file.
+/// </summary>
 public class GetConfig: MonoBehaviour
 {
 
