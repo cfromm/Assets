@@ -12,6 +12,7 @@ using Valve.VR;
 /// public override void OnMenuClicked(ClickedEventArgs e)
 /// {
 ///     base.OnMenuClicked(e);
+///     // Extra things you wish to do.
 /// }
 /// </code>
 /// </example>
@@ -23,7 +24,7 @@ public class ControllerHandler : SteamVR_TrackedController {
 	private Vector2 unTouchPos;
 
     /// <summary>
-    /// This function tells game manager to generate stimulus.
+    /// This function tells GameManager to generate stimulus.
     /// </summary>
     public override void OnTriggerClicked(ClickedEventArgs e)
 	{
@@ -39,7 +40,7 @@ public class ControllerHandler : SteamVR_TrackedController {
 	{
 		base.OnPadClicked(e);
 		
-		response_script.GetTouchResponse(true);
+		response_script.SetTouchResponse(true);
 	}
 
     /// <summary>
@@ -49,7 +50,7 @@ public class ControllerHandler : SteamVR_TrackedController {
 	{
 		base.OnPadUnclicked(e);
 		
-		response_script.GetTouchResponse(false);
+		response_script.SetTouchResponse(false);
 	}
 	
 	/// <summary>
@@ -72,7 +73,7 @@ public class ControllerHandler : SteamVR_TrackedController {
 		
 		unTouchPos.x = controllerState.rAxis0.x;
 		unTouchPos.y = controllerState.rAxis0.y;
-		DeterminPadDirection();
+        DeterminePadDirection();
 	}
 
     // Use this for initialization
@@ -95,21 +96,21 @@ public class ControllerHandler : SteamVR_TrackedController {
 	/// <summary>
 	/// This function determines the direction where user swipes the pad.
 	/// </summary>
-	public void DeterminPadDirection(){
+	public void DeterminePadDirection(){
 		Vector2 direction = unTouchPos - touchPos;
 		if( direction.y > 0.3 ){
 			Debug.Log("Up");
-			response_script.GetSwipeResponse(0);
+			response_script.SetSwipeResponse(0);
 		} else if( direction.y < -0.3 ){
 			Debug.Log("Down");
-			response_script.GetSwipeResponse(1);
+			response_script.SetSwipeResponse(1);
 		}
 		if( direction.x < -0.3 ){
 			Debug.Log("Left");
-			response_script.GetSwipeResponse(2);
+			response_script.SetSwipeResponse(2);
 		} else if( direction.x > 0.3 ){
 			Debug.Log("Right");
-			response_script.GetSwipeResponse(3);
+			response_script.SetSwipeResponse(3);
 		}
 	}
 	

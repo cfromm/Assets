@@ -5,18 +5,25 @@ using UnityEngine.Events;
 using System.Linq;    // For lambda-expression
 
 /// <summary>
-/// The main Response Getter class.
-/// Determines if the user response matches the stimulus.
+/// This class determines if the user response matches the stimulus.
 /// </summary>
 public class ResponseGetter : MonoBehaviour {
 
     public GameManager gameManager;
 	public bool waitingforResponse;
-	private string true_val;   // Stimulus direction or text
+
+    /// <summary>
+    /// Stimulus direction or text.
+    /// </summary>
+	private string true_val;
 	private string user_resp;
 	private bool isPoint;
 	private bool isTouch;
-	private bool[] user_direction;    // up, down, left, right		
+
+    /// <summary>
+    /// Index 0 to 3: up, down, left, right.
+    /// </summary>
+	private bool[] user_direction;		
 
     // Use this for initialization
     public void Start()
@@ -26,7 +33,7 @@ public class ResponseGetter : MonoBehaviour {
     }
 	
 	/// <summary>
-	/// Reset all monitoring parameter back to false.
+	/// Reset all monitoring parameters back to false.
 	/// </summary>
 	public void ResetMonitorParam()
 	{
@@ -37,9 +44,9 @@ public class ResponseGetter : MonoBehaviour {
 	}
 
     /// <summary>
-    /// Set up the desired string and start receiving user response.
+    /// Set up the desired string and start waiting for user response.
     /// </summary>
-    /// <param name="request">Stimulus direction or text.</param>
+    /// <param name="request">The stimulus direction or text.</param>
     public void SetResponseEvent( string request = null )
     {
 		// reset to prevent instant judge
@@ -47,11 +54,12 @@ public class ResponseGetter : MonoBehaviour {
 		true_val = request;	
 		waitingforResponse = true;
     }
-	
-	/// <summary>
-	/// This function tells if the user is pointing at the stimulus.
-	/// </summary>
-	public void GetPointResponse( bool isTrue )
+
+    /// <summary>
+    /// This function tells if the user is pointing at the stimulus.
+    /// </summary>
+    /// <param name="isTrue">If the user is pointing at the stimulus.</param>
+    public void SetPointResponse( bool isTrue )
 	{
 		isPoint = isTrue;
 	}
@@ -59,16 +67,17 @@ public class ResponseGetter : MonoBehaviour {
     /// <summary>
     /// This function tells if the user clikced controller's pad.
     /// </summary>
-    public void GetTouchResponse( bool isTrue )
+    /// <param name="isTrue">If the user clikced controller's pad.</param>
+    public void SetTouchResponse( bool isTrue )
 	{
 		isTouch = isTrue;
 	}
-	
-	/// <summary>
-	/// Set up the user's direction for InputJudge.
-	/// </summary>
-	/// <param name="direction">Used to indicate direction.</param>
-	public void GetSwipeResponse( int direction )
+
+    /// <summary>
+    /// Set up the user's response direction.
+    /// </summary>
+    /// <param name="direction">Used to indicate direction.</param>
+    public void SetSwipeResponse( int direction )
 	{
 		// clear last record
 		System.Array.Clear(user_direction, 0, user_direction.Length);
@@ -76,8 +85,7 @@ public class ResponseGetter : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// See if the user's response matches the stimulus
-	/// and tell the game manager the result
+	/// See if the user's response matches the stimulus and tell the game manager the result.
 	/// </summary>
     public void InputJudge()
     {   
@@ -103,7 +111,6 @@ public class ResponseGetter : MonoBehaviour {
 			// When user clicks the pad
 			if( isTouch == true )
 			{
-				// If user points at stimulus, pass true to game manager.
 				gameManager.UserResponse(isTouch, isPoint);
 				ResetMonitorParam();
 			}
@@ -146,9 +153,9 @@ public class ResponseGetter : MonoBehaviour {
 		}
 
     }
-	
-	// Update is called once per frame
-	void Update () 
+
+    // Update is called once per frame
+    public void Update () 
 	{		
 		if( waitingforResponse )
 		{

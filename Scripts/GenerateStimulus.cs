@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// This class generates and draws a stimulus
+/// This class generates and draws a stimulus.
 /// </summary>
 public class GenerateStimulus : MonoBehaviour {
 
@@ -116,12 +116,11 @@ public class GenerateStimulus : MonoBehaviour {
         fixationCross.transform.position = fix_position;
     }
 
-	
-	/// <summary>
-	/// This function generates the stimulus.
-	/// Tells game manager the generated stimulus information.
-	/// Tells "ResponseGetter.cs" to start fetching user response.
-	/// </summary>
+
+    /// <summary>
+    /// This function generates the stimulus.
+    /// Tells GameManager and ResponseGetter the generated stimulus information.
+    /// </summary>
     public void StimulusEvent()
     {
         thisStim = StimulusGenerator();

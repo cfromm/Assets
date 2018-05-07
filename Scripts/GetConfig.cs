@@ -4,7 +4,9 @@ using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
 
-
+/// <summary>
+/// Contains all the parameters needed for the whole experiment from Json file.
+/// </summary>
 public class Parameters
 {
     public Experiment Experiment_Params { get; set; }
@@ -31,6 +33,9 @@ public class Parameters
     //}
 }
 
+/// <summary>
+/// Contains the experiment parameters.
+/// </summary>
 public class Experiment
 {
     // Use the JsonProperty tag to make these global variables, accessible from any script. 
@@ -60,6 +65,9 @@ public class Experiment
 
 }
 
+/// <summary>
+/// Contains the parameters used to generate stimulus.
+/// </summary>
 public class Stimulus
 {
     [JsonProperty("Type")]
