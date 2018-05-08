@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-/// Test comment for versioning 
-
 /// <summary>
-/// This class generates and draws a stimulus
+/// This class generates and draws a stimulus.
 /// </summary>
 public class GenerateStimulus : MonoBehaviour {
 
@@ -37,7 +35,10 @@ public class GenerateStimulus : MonoBehaviour {
 		EventManager.StopListening("DestroyStim", DestroyStim);
     }
 
-
+    /// <summary>
+	/// This function destroys the current stimulus after <paramref name="seconds"/> seconds.
+	/// </summary>
+    /// <param name="seconds">The time that stimulus presents.</param>
     private IEnumerator RemoveAfterSeconds(float seconds)
     {		
         yield return new WaitForSeconds(seconds);
@@ -46,7 +47,7 @@ public class GenerateStimulus : MonoBehaviour {
     }
 	
 	/// <summary>
-	/// This function destroys the current stimulus instantly
+	/// This function destroys the current stimulus instantly.
 	/// </summary>
 	private void DestroyStim()
 	{
@@ -58,7 +59,7 @@ public class GenerateStimulus : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// This function sets the color range of the stimulus
+	/// This function sets the color range of the stimulus.
 	/// </summary>
 	public void GetColorRange()
 	{
@@ -115,12 +116,11 @@ public class GenerateStimulus : MonoBehaviour {
         fixationCross.transform.position = fix_position;
     }
 
-	
-	/// <summary>
-	/// This function generates the stimulus
-	/// Tells game manager the generated stimulus information
-	/// Tells "ResponseGetter.cs" to start fetching user response
-	/// </summary>
+
+    /// <summary>
+    /// This function generates the stimulus.
+    /// Tells GameManager and ResponseGetter the generated stimulus information.
+    /// </summary>
     public void StimulusEvent()
     {
         thisStim = StimulusGenerator();

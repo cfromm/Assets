@@ -5,13 +5,14 @@ using Valve.VR;
 
 /// <summary>
 /// This class inherits from "SteamVR_TrackedController" script.
-/// Button functions will be called once
+/// Button functions will be called once.
 /// </summary>
 /// <example>
 /// <code>
 /// public override void OnMenuClicked(ClickedEventArgs e)
 /// {
 ///     base.OnMenuClicked(e);
+///     // Extra things you wish to do.
 /// }
 /// </code>
 /// </example>
@@ -21,37 +22,39 @@ public class ControllerHandler : SteamVR_TrackedController {
 	private ResponseGetter response_script;
 	private Vector2 touchPos;
 	private Vector2 unTouchPos;
-	
-	/// <summary>
-	/// This function tells game manager to generate stimulus
-	/// </summary>
-	/// <remarks>
-	/// This function will be called once trigger has been pressed
-	/// </remarks>
-	public override void OnTriggerClicked(ClickedEventArgs e)
+
+    /// <summary>
+    /// This function tells GameManager to generate stimulus.
+    /// </summary>
+    public override void OnTriggerClicked(ClickedEventArgs e)
 	{
 		base.OnTriggerClicked(e);
 		
 		gameManager.GetComponent<GameManager>().AcceptSignal();	
 	}
-		
-	
-	public override void OnPadClicked(ClickedEventArgs e)
+
+    /// <summary>
+    /// This function tells ResponseGetter that user clicks pad.
+    /// </summary>
+    public override void OnPadClicked(ClickedEventArgs e)
 	{
 		base.OnPadClicked(e);
 		
-		response_script.GetTouchResponse(true);
+		response_script.SetTouchResponse(true);
 	}
-	
-	public override void OnPadUnclicked(ClickedEventArgs e)
+
+    /// <summary>
+    /// This function ResponseGetter that user unclicks pad.
+    /// </summary>
+    public override void OnPadUnclicked(ClickedEventArgs e)
 	{
 		base.OnPadUnclicked(e);
 		
-		response_script.GetTouchResponse(false);
+		response_script.SetTouchResponse(false);
 	}
 	
 	/// <summary>
-	/// This function records the position where user touches pad
+	/// This function records the position where user touches pad.
 	/// </summary>
 	public override void OnPadTouched(ClickedEventArgs e)
 	{
@@ -62,7 +65,7 @@ public class ControllerHandler : SteamVR_TrackedController {
 	}
 	
 	/// <summary>
-	/// This function records the position where user leaves pad
+	/// This function records the position where user leaves pad.
 	/// </summary>
 	public override void OnPadUntouched(ClickedEventArgs e)
 	{
@@ -70,7 +73,7 @@ public class ControllerHandler : SteamVR_TrackedController {
 		
 		unTouchPos.x = controllerState.rAxis0.x;
 		unTouchPos.y = controllerState.rAxis0.y;
-		DeterminPadDirection();
+        DeterminePadDirection();
 	}
 
     // Use this for initialization
@@ -91,23 +94,23 @@ public class ControllerHandler : SteamVR_TrackedController {
 	
 	
 	/// <summary>
-	/// This function determines the direction where user swipes the pad
+	/// This function determines the direction where user swipes the pad.
 	/// </summary>
-	public void DeterminPadDirection(){
+	public void DeterminePadDirection(){
 		Vector2 direction = unTouchPos - touchPos;
 		if( direction.y > 0.3 ){
 			Debug.Log("Up");
-			response_script.GetSwipeResponse(0);
+			response_script.SetSwipeResponse(0);
 		} else if( direction.y < -0.3 ){
 			Debug.Log("Down");
-			response_script.GetSwipeResponse(1);
+			response_script.SetSwipeResponse(1);
 		}
 		if( direction.x < -0.3 ){
 			Debug.Log("Left");
-			response_script.GetSwipeResponse(2);
+			response_script.SetSwipeResponse(2);
 		} else if( direction.x > 0.3 ){
 			Debug.Log("Right");
-			response_script.GetSwipeResponse(3);
+			response_script.SetSwipeResponse(3);
 		}
 	}
 	

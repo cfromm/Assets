@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class changes the position of the stimulus if needed.
+/// </summary>
 public class StimulusPositionUpdate : MonoBehaviour {
     SMI.SMIEyeTrackingUnity smiInstance = null;
     Vector3 cameraRaycast;
 	Vector3 offsets;
 	
     // Use this for initialization
-    void Start() {
+    public void Start() {
         smiInstance = SMI.SMIEyeTrackingUnity.Instance;
 		offsets = new Vector3 (0f, 0f, 0f);
 		
@@ -24,10 +27,10 @@ public class StimulusPositionUpdate : MonoBehaviour {
 
 
     /// <summary>
-    /// Get the SMI gaze position and add the desired offset
-    /// To be called in update if gaze-contingent stimulus is desired
+    /// Get the SMI gaze position and add the desired offset.
+    /// To be called in update if gaze-contingent stimulus is desired.
     /// </summary>
-    void UpdateWithGazePosition()
+    public void UpdateWithGazePosition()
     {
         cameraRaycast = smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast();
         
@@ -36,9 +39,9 @@ public class StimulusPositionUpdate : MonoBehaviour {
 		}
 		
 	}
-	
+
     // Update is called once per frame
-    void Update () {
+    public void Update () {
 		
         if (Stimulus.GazeContingent)
         { UpdateWithGazePosition(); }
