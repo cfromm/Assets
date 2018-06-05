@@ -4,7 +4,7 @@
     "SaveLocation": "D:\\Data\\CBRecoveryVive\\",
     "Staircase": "3",
     "Trials": "20",
-    "Num_Levels": "4",
+    "Num_Levels": "10",
     "X_Fixation": "0",
     "Y_Fixation": "0",
     "Z_Fixation": "0",
@@ -18,8 +18,17 @@
     "Letter": "E,H,F,R,B,P",
     "Height": "0.5",
     "Max_Color": "1",
-    "Duration": "3",
-    "GazeContingent": "true"
+    "Duration": "0.5",
+    "GazeContingent": "true",
+    "Angle": "0,40,80,120,160,200,240,280,320,355",
+    "ApertureRad": "2.5",
+    "InterTrialInterval": "1.5",
+    "Density": "3.5",
+    "SizeArcmin": "14",
+    "SpeedInDegreesPerSec": "5",
+    "IndividualLifetime": "0.25",
+    "Directions": "Left,Right",
+    "2Dor3D":  "2",
   }
   
 }

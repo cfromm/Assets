@@ -18,8 +18,8 @@ public class GenerateStimulus : MonoBehaviour {
     public GameManager gameManager;
     private UnityAction spawnStim;
 	
-	private float col_low;
-	private float col_high;
+	private float var_low;
+	private float var_high;
 
     private void Awake()
     {
@@ -60,11 +60,20 @@ public class GenerateStimulus : MonoBehaviour {
 	/// <summary>
 	/// This function sets the color range of the stimulus
 	/// </summary>
-	public void GetColorRange()
-	{
-        float level_size = Stimulus.Max_Color / Experiment.Num_Levels;
-        col_low = Stimulus.Max_Color - (gameManager.current_level) * level_size;
-        col_high = Stimulus.Max_Color - (gameManager.current_level + 1) * level_size;
+	public void GetStimRange()
+	{  
+        if (Stimulus.Type == "t")
+        {
+            
+            float level_size = Stimulus.Max_Color / Experiment.Num_Levels;
+            var_low = Stimulus.Max_Color - (gameManager.current_level) * level_size;
+            var_high = Stimulus.Max_Color - (gameManager.current_level + 1) * level_size;
+        }
+        if (Stimulus.Type == "d")
+        {
+            string[] angles = Stimulus.Angle.Split(',');
+            var_high = float.Parse(angles[gameManager.current_level]);
+        }
 	}
     
 	/// <summary>
@@ -72,31 +81,25 @@ public class GenerateStimulus : MonoBehaviour {
 	/// </summary>
     public GameObject StimulusGenerator()
     {
-        GameObject thisStim = (GameObject)Instantiate(Resources.Load("TextStimulus"));
-		thisStim.gameObject.tag = "Stimulus";
-        thisStim.SetActive(true);
-        TextMesh stimComponent = null;	
-		GetColorRange();
-		
-        string[] stims = Stimulus.Letter.Split(',');
+		GetStimRange();
+        string[] stims = null;
+
         if (Stimulus.Type == "t")  //if new stimulus type is desired add to this section
         {
+            GameObject thisStim = (GameObject)Instantiate(Resources.Load("TextStimulus"));
+            thisStim.gameObject.tag = "Stimulus";
+            thisStim.SetActive(true);
+            TextMesh stimComponent = null;
+            stims = Stimulus.Letter.Split(',');
             stimComponent = thisStim.GetComponent<TextMesh>();
             stimComponent.text = stims[Random.Range(0, stims.Length)];
-            stimComponent.color = new Color (0f, 0f, 0f, Random.Range(col_low, col_high));			
+            stimComponent.color = new Color (0f, 0f, 0f, Random.Range(var_low, var_high));			
 		}
-        ////Pending input method that can be performed inside the helmet
-        //if (Experiment.InputMethod == "m") 
-        //{ for(int i = 0; i < stims.Length; i++)
-        //    {
-        //        GameObject ChoiceObj = thisStim;
-        //        TextMesh choiceComponent = ChoiceObj.GetComponent<TextMesh>();
-        //        choiceComponent.text = stims[i];
-        //        choiceComponent.color = Color.black;
-        //        ChoiceObj.AddComponent<BoxCollider>(); 
-        //        ChoiceObj.SetActive(true);
-        //    }
-       // }
+        if (Stimulus.Type == "d")
+        {
+            stims = Stimulus.Direction.Split(',');
+
+        }
 
         else
         {
@@ -124,9 +127,16 @@ public class GenerateStimulus : MonoBehaviour {
     public void StimulusEvent()
     {
         thisStim = StimulusGenerator();
-		
-		// after generating the stimulus, start waiting for user response	
-		string requested = thisStim.GetComponent<TextMesh>().text;
+        string requested = null;
+        // after generating the stimulus, start waiting for user response	
+        if (Stimulus.Type == "t")
+        {
+        requested = thisStim.GetComponent<TextMesh>().text;
+        }
+        if (Stimulus.Type == "d")
+        {
+           // requested = thisStim.GetComponent.direction;
+        }
 
         AudioSource audio = GetComponent<AudioSource>();
         audio.Play();

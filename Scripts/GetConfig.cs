@@ -74,7 +74,24 @@ public class Stimulus
     public static float Duration { get; set; }
     [JsonProperty("GazeContingent")]
     public static bool GazeContingent { get; set; }
-
+    [JsonProperty("Angle")]
+    public static string Angle { get; set; }
+    [JsonProperty("ApertureRad")]
+    public static float ApertureRad { get; set; }
+    [JsonProperty("InterTrialInterval")]
+    public static float ITI { get; set; }
+    [JsonProperty("Density")]
+    public static float Density { get; set; }
+    [JsonProperty("SizeArcmin")]
+    public static float DotSize { get; set; }
+    [JsonProperty("SpeedInDegreesPerSec")]
+    public static float DotSpeed { get; set; }
+    [JsonProperty("IndividualLifetime")]
+    public static float DotLife { get; set; }
+    [JsonProperty("DirectionRange")]
+    public static string Direction { get; set; }
+    [JsonProperty("2Dor3D")]
+    public static int FlatOrRound { get; set; }
 }
 
 /*
@@ -127,7 +144,7 @@ public class GetConfig: MonoBehaviour
             Parameters all_params = JsonConvert.DeserializeObject<Parameters>(dataAsJson);
             all_params = null;
             //Uncomment below to view output in Unity console
-            //Debug.Log(Experiment.Staircase);
+            Debug.Log(Stimulus.Direction);
         }
 
     }
