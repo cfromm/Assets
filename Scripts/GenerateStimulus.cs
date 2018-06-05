@@ -98,6 +98,9 @@ public class GenerateStimulus : MonoBehaviour {
         if (Stimulus.Type == "d")
         {
             stims = Stimulus.Direction.Split(',');
+            GameObject thisStim = (GameObject)Instantiate(Resources.Load("DotStimulus"));
+            thisStim.gameObject.tag = "Stimulus";
+            thisStim.SetActive(true);
 
         }
 
