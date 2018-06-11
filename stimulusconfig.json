@@ -14,7 +14,7 @@
     "Pause_time": "1"
   },
   "Stimulus_Params": {
-    "Type": "t",
+    "Type": "d",
     "Letter": "E,H,F,R,B,P",
     "Height": "0.5",
     "Max_Color": "1",
@@ -28,7 +28,8 @@
     "SpeedInDegreesPerSec": "5",
     "IndividualLifetime": "0.25",
     "Directions": "Left,Right",
-    "2Dor3D":  "2",
+    "2Dor3D": "2",
+    "StimDepthMeters": "0.42"
   }
   
 }

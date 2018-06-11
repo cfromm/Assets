@@ -88,10 +88,12 @@ public class Stimulus
     public static float DotSpeed { get; set; }
     [JsonProperty("IndividualLifetime")]
     public static float DotLife { get; set; }
-    [JsonProperty("DirectionRange")]
-    public static string Direction { get; set; }
+    [JsonProperty("Directions")]
+    public static string Directions { get; set; }
     [JsonProperty("2Dor3D")]
     public static int FlatOrRound { get; set; }
+    [JsonProperty("StimDepthMeters")]
+    public static float StimDepth { get; set; }
 }
 
 /*
@@ -144,7 +146,7 @@ public class GetConfig: MonoBehaviour
             Parameters all_params = JsonConvert.DeserializeObject<Parameters>(dataAsJson);
             all_params = null;
             //Uncomment below to view output in Unity console
-            Debug.Log(Stimulus.Direction);
+            Debug.Log("Stimulus type: " + Stimulus.Type);
         }
 
     }

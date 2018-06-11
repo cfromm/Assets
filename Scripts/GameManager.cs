@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
 	public bool stimulus_present = false;
     public Color current_color;
 	public string current_text;
+    public string current_angle;
+    public string current_direction;
     public bool ExperimentComplete = false;
 	private float stimStartTime;
     public AudioClip success_sound;

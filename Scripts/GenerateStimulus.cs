@@ -38,13 +38,16 @@ public class GenerateStimulus : MonoBehaviour {
     }
 
 
-    private IEnumerator RemoveAfterSeconds(float seconds)
+    private IEnumerator RemoveAfterSeconds(float seconds, GameObject stimulus)
     {		
         yield return new WaitForSeconds(seconds);
-        Destroy( thisStim );
+        Debug.Log("Waiting to destroy");
+        Destroy( stimulus );
+        Debug.Log("Stimulus has been destroyed");
 		gameManager.stimulus_present = false;
     }
-	
+
+
 	/// <summary>
 	/// This function destroys the current stimulus instantly
 	/// </summary>
@@ -93,14 +96,18 @@ public class GenerateStimulus : MonoBehaviour {
             stims = Stimulus.Letter.Split(',');
             stimComponent = thisStim.GetComponent<TextMesh>();
             stimComponent.text = stims[Random.Range(0, stims.Length)];
-            stimComponent.color = new Color (0f, 0f, 0f, Random.Range(var_low, var_high));			
+            stimComponent.color = new Color (0f, 0f, 0f, Random.Range(var_low, var_high));
+            return thisStim;
 		}
         if (Stimulus.Type == "d")
         {
-            stims = Stimulus.Direction.Split(',');
+            stims = Stimulus.Directions.Split(',');
             GameObject thisStim = (GameObject)Instantiate(Resources.Load("DotStimulus"));
             thisStim.gameObject.tag = "Stimulus";
             thisStim.SetActive(true);
+            
+            //TimedDestroy();
+            return thisStim;
 
         }
 
@@ -108,8 +115,9 @@ public class GenerateStimulus : MonoBehaviour {
         {
             print("Non-text stimulus not yet supported");
         }
-		
-		StartCoroutine( RemoveAfterSeconds(Stimulus.Duration) );
+
+        //Invoke("DestroyStim", Stimulus.Duration);
+        //StartCoroutine( RemoveAfterSeconds(Stimulus.Duration, thisStim) );
         return thisStim;
     }
 
@@ -130,21 +138,23 @@ public class GenerateStimulus : MonoBehaviour {
     public void StimulusEvent()
     {
         thisStim = StimulusGenerator();
+        Invoke("DestroyStim", Stimulus.Duration);
         string requested = null;
         // after generating the stimulus, start waiting for user response	
         if (Stimulus.Type == "t")
         {
         requested = thisStim.GetComponent<TextMesh>().text;
+        gameManager.current_text = requested;
+        gameManager.current_color = thisStim.GetComponent<TextMesh>().color;
         }
         if (Stimulus.Type == "d")
         {
-           // requested = thisStim.GetComponent.direction;
+        //requested = thisStim.GetComponentInChildren<>;
         }
 
         AudioSource audio = GetComponent<AudioSource>();
         audio.Play();
-        gameManager.current_text = requested;
-		gameManager.current_color = thisStim.GetComponent<TextMesh>().color;
+
 		GameObject response_obj = GameObject.Find("ResponseModule");
 		response_obj.GetComponent<ResponseGetter>().SetResponseEvent(requested);
     }
