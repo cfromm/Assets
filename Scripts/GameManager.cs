@@ -9,8 +9,14 @@ public class GameManager : MonoBehaviour {
     private GameObject StimObject;
     private GenerateStimulus StimScript;
     public static GameManager instance = null;
-    public int current_level = 0;
-    public int running_consecutive_correct = 0;	
+    public int current_staircase;
+    public int current_level;
+    public int level_1 = Experiment.Stair1_Init;
+    public int running_consecutive_correct_1 = 0;
+    public int level_2 = Experiment.Stair2_Init;
+    public int running_consecutive_correct_2 = 0;
+    public int level_3 = Experiment.Stair3_Init;
+    public int running_consecutive_correct_3 = 0;
     public bool generate_state;	// if the scene is ready to generate the next stimulus
     public bool fixation;
     //private bool response_match; //whether the user response is correct
@@ -83,7 +89,7 @@ public class GameManager : MonoBehaviour {
     {
 		if( generate_state ){
 			trial_number += 1;
-
+            current_staircase = UnityEngine.Random.Range(0, 4);
 			EventManager.TriggerEvent("spawnStim");
 			generate_state = false;
 			stimulus_present = true;
@@ -139,30 +145,75 @@ public class GameManager : MonoBehaviour {
 	/// </remark>
     public void TrialCounter( int score )
     {	
-		AudioSource sounds = GetComponent<AudioSource>();		
-		if( score > 0 )
+		AudioSource sounds = GetComponent<AudioSource>();
+        if (score > 0 && current_staircase == 1)
 		{
-			running_consecutive_correct += score;
-			if( running_consecutive_correct >= 3 )
+			running_consecutive_correct_1 += score;
+			if( running_consecutive_correct_1 >= 3 )
 			{
-				current_level += 1;
-				running_consecutive_correct -= 3;
+				level_1 += 1;
+				running_consecutive_correct_1 -= 3;
 			}
 			sounds.clip = success_sound;
             sounds.Play();
-		} else
+		} 
+        if (score <= 0 && current_staircase== 1)
 		{
-			running_consecutive_correct = 0;
-			if( current_level > 0 )
+			running_consecutive_correct_1 = 0;
+			if( level_1 > 0 )
 			{
-				current_level -= 1;
+				level_1 -= 1;
 			}
             sounds.clip = fail_sound;
             sounds.Play();
 		}
-			
-		// Destroy the stimulus and set generate_state back to true
-		EventManager.TriggerEvent("DestroyStim");
+
+        if (score > 0 && current_staircase == 2)
+        {
+            running_consecutive_correct_2 += score;
+            if (running_consecutive_correct_2 >= 3)
+            {
+                level_2 += 1;
+                running_consecutive_correct_2 -= 3;
+            }
+            sounds.clip = success_sound;
+            sounds.Play();
+        }
+        if (score <= 0 && current_staircase == 2)
+        {
+            running_consecutive_correct_2 = 0;
+            if (level_2 > 0)
+            {
+                level_2 -= 1;
+            }
+            sounds.clip = fail_sound;
+            sounds.Play();
+        }
+
+        if (score > 0 && current_staircase == 3)
+            {
+            running_consecutive_correct_3 += score;
+            if (running_consecutive_correct_3 >= 3)
+            {
+                level_3 += 1;
+                running_consecutive_correct_3 -= 3;
+            }
+            sounds.clip = success_sound;
+            sounds.Play();
+        }
+        if (score > 0 && current_staircase == 3)
+            {
+            running_consecutive_correct_3 = 0;
+            if (level_3 > 0)
+            {
+                level_3 -= 1;
+            }
+            sounds.clip = fail_sound;
+            sounds.Play();
+        }
+
+        // Destroy the stimulus and set generate_state back to true
+        EventManager.TriggerEvent("DestroyStim");
 		generate_state = true;
 		stimulus_present = false;
 	
@@ -194,6 +245,7 @@ public class GameManager : MonoBehaviour {
     {
         StimObject = GameObject.Find("StimulusObject");
         StimScript = (GenerateStimulus)StimObject.GetComponent<GenerateStimulus>();
+        current_staircase = UnityEngine.Random.Range(0, 4);
 
 		generate_state = true;
 		smiInstance = SMI.SMIEyeTrackingUnity.Instance;
@@ -312,7 +364,7 @@ public class GameManager : MonoBehaviour {
 			"Experiment type: " + "a" + "\t" +
 			"Stimulus type: " + Stimulus.Type + "\t" +
 			"Response type: " + Experiment.InputMethod + "\t" +
-			"level: " + current_level + "\t" +
+			//"level: " + current_level + "\t" +
 			"Text: " + current_text + "\t" +
 			Environment.NewLine
             );

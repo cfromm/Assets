@@ -2,7 +2,7 @@
   "Experiment_Params": {
     "InputMethod" : "pc",
     "SaveLocation": "D:\\Data\\CBRecoveryVive\\",
-    "Staircase": "3",
+    "Staircase_ratio": "3",
     "Trials": "20",
     "Num_Levels": "10",
     "X_Fixation": "0",
@@ -11,7 +11,10 @@
     "x_offset": "10",
     "y_offset": "2",
     "z_offset": "0",
-    "Pause_time": "1"
+    "Pause_time": "1",
+    "Staircase1_Initial": "0",
+    "Staircase2_Initial": "2",
+    "Staircase3_Initial": "4"
   },
   "Stimulus_Params": {
     "Type": "d",

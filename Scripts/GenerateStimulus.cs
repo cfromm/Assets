@@ -17,9 +17,10 @@ public class GenerateStimulus : MonoBehaviour {
     public string[] stims;
     public GameManager gameManager;
     private UnityAction spawnStim;
+    private int direction;
 	
 	private float var_low;
-	private float var_high;
+	public float var_high;
 
     private void Awake()
     {
@@ -64,16 +65,30 @@ public class GenerateStimulus : MonoBehaviour {
 	/// This function sets the color range of the stimulus
 	/// </summary>
 	public void GetStimRange()
-	{  
+	{
+        if (gameManager.current_staircase == 1)
+        {
+            gameManager.current_level = gameManager.level_1;
+        }
+        if (gameManager.current_staircase == 2)
+        {
+            gameManager.current_level = gameManager.level_2;
+        }
+        if (gameManager.current_staircase == 3)
+        {
+            gameManager.current_level = gameManager.level_3;
+        }
+
+
         if (Stimulus.Type == "t")
         {
-            
             float level_size = Stimulus.Max_Color / Experiment.Num_Levels;
             var_low = Stimulus.Max_Color - (gameManager.current_level) * level_size;
             var_high = Stimulus.Max_Color - (gameManager.current_level + 1) * level_size;
         }
         if (Stimulus.Type == "d")
         {
+
             string[] angles = Stimulus.Angle.Split(',');
             var_high = float.Parse(angles[gameManager.current_level]);
         }
@@ -104,6 +119,7 @@ public class GenerateStimulus : MonoBehaviour {
             stims = Stimulus.Directions.Split(',');
             GameObject thisStim = (GameObject)Instantiate(Resources.Load("DotStimulus"));
             thisStim.gameObject.tag = "Stimulus";
+            //thisStim.GetComponent<DotMotion>().current_angle = var_high; 
             thisStim.SetActive(true);
             
             //TimedDestroy();
@@ -149,7 +165,16 @@ public class GenerateStimulus : MonoBehaviour {
         }
         if (Stimulus.Type == "d")
         {
-        //requested = thisStim.GetComponentInChildren<>;
+            direction = thisStim.GetComponent<DotStimScript>().stim_direction;
+            if (direction == 0)
+            {
+                requested = "Left";
+            }
+            if (direction == 1)
+            {
+                requested = "Right";
+            }
+
         }
 
         AudioSource audio = GetComponent<AudioSource>();

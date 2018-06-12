@@ -39,7 +39,7 @@ public class Experiment
     public static string InputMethod { get; set; }
     [JsonProperty("SaveLocation")]
     public static string SaveLocation { get; set; }
-    [JsonProperty("Staircase")]
+    [JsonProperty("Staircase_ratio")]
     public static float Staircase { get; set; }
     [JsonProperty("Num_Levels")]
     public static int Num_Levels { get; set; }
@@ -57,6 +57,12 @@ public class Experiment
     public static float Y_Fixation { get; set; }
     [JsonProperty("Z_Fixation")]
     public static float Z_Fixation { get; set; }
+    [JsonProperty("Staricase1_Initial")]
+    public static int Stair1_Init { get; set; }
+    [JsonProperty("Staricase2_Initial")]
+    public static int Stair2_Init { get; set; }
+    [JsonProperty("Staricase3_Initial")]
+    public static int Stair3_Init { get; set; }
 
 }
 
