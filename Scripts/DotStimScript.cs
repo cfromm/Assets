@@ -8,6 +8,9 @@ public class DotStimScript : MonoBehaviour {
     public float dot_diam_units;
     public float ap_rad_units;
     public int stim_direction;
+    public float max_angle;
+    public float draw_time;
+    List<GameObject> dots;
 
     void Start()
     {
@@ -15,7 +18,7 @@ public class DotStimScript : MonoBehaviour {
         num_dots = Mathf.Pow(Stimulus.ApertureRad, 2f) * Mathf.PI * Stimulus.Density;
         dot_diam_units = ((Stimulus.DotSize * Mathf.PI) / (60 * 180)) * Stimulus.StimDepth; //convert arcmin to radians (drop sin term due to small angle approx) and scale by depth
         ap_rad_units = ((Stimulus.ApertureRad * Mathf.PI) / (180)) * Stimulus.StimDepth;
-        Debug.Log("Dots scale(absolute): " + dot_diam_units);
+        dots = new List<GameObject>();
         for (int i = 0; i < (int)num_dots; i++)
         {
             GameObject dot = (GameObject)Instantiate(Resources.Load("SingleDot"));
@@ -23,9 +26,25 @@ public class DotStimScript : MonoBehaviour {
             Vector2 dot_position = Random.insideUnitCircle * 0.5f;
             dot.transform.localPosition = new Vector3(dot_position[0], 0, dot_position[1]);
             dot.transform.localScale = new Vector3(dot_diam_units/(2*ap_rad_units), 0, dot_diam_units/(2*ap_rad_units));
-
+            dot.GetComponent<DotMotion>().current_angle = max_angle;
+            dot.GetComponent<DotMotion>().current_direction = stim_direction;
+            dot.SetActive(false);
+            dots.Add(dot);
         }
+        drawDots();
     }
 
-
+    void drawDots()
+    {
+        Debug.Log("Start of draw loop: "  + Time.realtimeSinceStartup);
+        for(int i = 0; i < (int)num_dots; i++)
+        {
+            if (!dots[i].activeInHierarchy)
+            {
+                dots[i].SetActive(true);
+                dots[i].GetComponent<DotMotion>().start_of_dot = Time.realtimeSinceStartup;
+            }
+        }
+        Debug.Log("End of draw loop: " + Time.realtimeSinceStartup);
+    }
 }

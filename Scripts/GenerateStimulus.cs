@@ -119,7 +119,7 @@ public class GenerateStimulus : MonoBehaviour {
             stims = Stimulus.Directions.Split(',');
             GameObject thisStim = (GameObject)Instantiate(Resources.Load("DotStimulus"));
             thisStim.gameObject.tag = "Stimulus";
-            //thisStim.GetComponent<DotMotion>().current_angle = var_high; 
+            thisStim.GetComponent<DotStimScript>().max_angle = var_high; 
             thisStim.SetActive(true);
             
             //TimedDestroy();
@@ -127,12 +127,9 @@ public class GenerateStimulus : MonoBehaviour {
 
         }
 
-        else
-        {
-            print("Non-text stimulus not yet supported");
-        }
+    
 
-        //Invoke("DestroyStim", Stimulus.Duration);
+        Invoke("DestroyStim", Stimulus.Duration);
         //StartCoroutine( RemoveAfterSeconds(Stimulus.Duration, thisStim) );
         return thisStim;
     }
