@@ -103,10 +103,10 @@ public class ControllerHandler : SteamVR_TrackedController {
 			response_script.GetSwipeResponse(1);
 		}
 		if( direction.x < -0.3 ){
-			Debug.Log("Left");
+			Debug.Log("User entered: Left");
 			response_script.GetSwipeResponse(2);
 		} else if( direction.x > 0.3 ){
-			Debug.Log("Right");
+			Debug.Log("User entered: Right");
 			response_script.GetSwipeResponse(3);
 		}
 	}

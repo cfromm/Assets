@@ -36,7 +36,7 @@ public class DotStimScript : MonoBehaviour {
 
     void drawDots()
     {
-        Debug.Log("Start of draw loop: "  + Time.realtimeSinceStartup);
+
         for(int i = 0; i < (int)num_dots; i++)
         {
             if (!dots[i].activeInHierarchy)
@@ -45,6 +45,6 @@ public class DotStimScript : MonoBehaviour {
                 dots[i].GetComponent<DotMotion>().start_of_dot = Time.realtimeSinceStartup;
             }
         }
-        Debug.Log("End of draw loop: " + Time.realtimeSinceStartup);
+
     }
 }

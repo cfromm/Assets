@@ -34,8 +34,7 @@ public class StimulusPositionUpdate : MonoBehaviour {
         
 		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
             transform.position = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
-            // replace Stimulus.StimDepth with cameraRaycast.y if you want to use binocular depth cue from SMI
-            Debug.Log("Stimulus is " + Mathf.Sin(Stimulus.ApertureRad * Mathf.PI / 180f) + " meters big, viewed at " +Stimulus.StimDepth);
+           // Debug.Log("Stimulus is " + 2*Mathf.Sin(Stimulus.ApertureRad * Mathf.PI / 180f)*Stimulus.StimDepth + " meters big, viewed at " +Stimulus.StimDepth);
             transform.localScale = new Vector3(2*Mathf.Sin((Stimulus.ApertureRad*Mathf.PI)/180) * Stimulus.StimDepth, 0, 2*Mathf.Sin(Stimulus.ApertureRad * Mathf.PI / 180) * Stimulus.StimDepth);
             //CHECK CONVERSION FROM RADIANS TO DEGREES IN THE SIN FUNCTION
         }
