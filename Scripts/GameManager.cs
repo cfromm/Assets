@@ -8,6 +8,7 @@ using System.Text;
 public class GameManager : MonoBehaviour {
     private GameObject StimObject;
     private GenerateStimulus StimScript;
+    public bool SaveBool;
     public static GameManager instance = null;
     public int current_staircase;
     public int current_level;
@@ -75,8 +76,11 @@ public class GameManager : MonoBehaviour {
     private void OnApplicationQuit()
     {
         instance = null;
-		streams.Close();
-		trialStreams.Close();
+        if (SaveBool)
+        {
+            streams.Close();
+            trialStreams.Close();
+        }
         Destroy(gameObject);	
     }
 
@@ -152,6 +156,8 @@ public class GameManager : MonoBehaviour {
 			if( running_consecutive_correct_1 >= 3 )
 			{
 				level_1 += 1;
+                if(level_1 > Experiment.Num_Levels-1)
+                { level_1 = Experiment.Num_Levels - 1; }
 				running_consecutive_correct_1 -= 3;
 			}
 			sounds.clip = success_sound;
@@ -174,7 +180,10 @@ public class GameManager : MonoBehaviour {
             if (running_consecutive_correct_2 >= 3)
             {
                 level_2 += 1;
+                if (level_2 > Experiment.Num_Levels - 1)
+                { level_2 = Experiment.Num_Levels - 1; }
                 running_consecutive_correct_2 -= 3;
+
             }
             sounds.clip = success_sound;
             sounds.Play();
@@ -196,6 +205,8 @@ public class GameManager : MonoBehaviour {
             if (running_consecutive_correct_3 >= 3)
             {
                 level_3 += 1;
+                if (level_3 > Experiment.Num_Levels - 1)
+                { level_3 = Experiment.Num_Levels - 1; }
                 running_consecutive_correct_3 -= 3;
             }
             sounds.clip = success_sound;
@@ -228,10 +239,13 @@ public class GameManager : MonoBehaviour {
 				Experiment.InputMethod + "\t\t\t" + current_text + "\t\t" +
 				current_color + Environment.NewLine
 			);
-		}   
-        writeString = stringBuilder.ToString();
-        writebytes = Encoding.ASCII.GetBytes(writeString);
-        trialStreams.Write(writebytes, 0, writebytes.Length);
+		}
+        if (SaveBool)
+        {
+            writeString = stringBuilder.ToString();
+            writebytes = Encoding.ASCII.GetBytes(writeString);
+            trialStreams.Write(writebytes, 0, writebytes.Length);
+        }
 		
         if (trial_number >= Experiment.Trials)
         {
@@ -245,24 +259,28 @@ public class GameManager : MonoBehaviour {
     {
         StimObject = GameObject.Find("StimulusObject");
         StimScript = (GenerateStimulus)StimObject.GetComponent<GenerateStimulus>();
+        SaveBool = Experiment.SaveBool;
         current_staircase = UnityEngine.Random.Range(0, 4);
 
 		generate_state = true;
 		smiInstance = SMI.SMIEyeTrackingUnity.Instance;
 
-		// create a folder based on "SaveLocation" from Json file and today's date
-		String outputDir = Path.Combine(Experiment.SaveLocation, DateTime.Now.ToString("MM-dd-yyyy") );
-		Directory.CreateDirectory( outputDir );	
+        if (SaveBool)
+        {
+            // create a folder based on "SaveLocation" from Json file and today's date
+            String outputDir = Path.Combine(Experiment.SaveLocation, DateTime.Now.ToString("MM-dd-yyyy"));
+            Directory.CreateDirectory(outputDir);
 
-		// create a file inside the folder based on the current time
-		String outFileName = Path.Combine(outputDir, DateTime.Now.ToString("HH-mm") + ".txt");
-		streams = new FileStream(outFileName, FileMode.Create, FileAccess.Write);
-				
-		// create another file to record trial results
-		String trialOutput = Path.Combine(outputDir, DateTime.Now.ToString("Trail-HH-mm") + ".txt");
-		trialStreams = new FileStream(trialOutput, FileMode.Create, FileAccess.Write);
-		
-		WriteHeader();
+            // create a file inside the folder based on the current time
+            String outFileName = Path.Combine(outputDir, DateTime.Now.ToString("HH-mm") + ".txt");
+            streams = new FileStream(outFileName, FileMode.Create, FileAccess.Write);
+
+            // create another file to record trial results
+            String trialOutput = Path.Combine(outputDir, DateTime.Now.ToString("Trial-HH-mm") + ".txt");
+            trialStreams = new FileStream(trialOutput, FileMode.Create, FileAccess.Write);
+
+            WriteHeader();
+        }
     }
 
     /// <summary>
@@ -403,7 +421,7 @@ public class GameManager : MonoBehaviour {
 			}
 		} 
 				
-		if( startWrite ){
+		if( startWrite && SaveBool){
 			WriteFile();
 		}
 		

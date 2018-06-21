@@ -34,9 +34,11 @@ public class Parameters
 public class Experiment
 {
     // Use the JsonProperty tag to make these global variables, accessible from any script. 
-	// Variable name must match its tag's name (lower upper case does not matter).
+    // Variable name must match its tag's name (lower upper case does not matter).
     [JsonProperty("InputMethod")]
     public static string InputMethod { get; set; }
+    [JsonProperty("SaveBool")]
+    public static bool SaveBool { get; set; } 
     [JsonProperty("SaveLocation")]
     public static string SaveLocation { get; set; }
     [JsonProperty("Staircase_ratio")]
@@ -45,9 +47,9 @@ public class Experiment
     public static int Num_Levels { get; set; }
     [JsonProperty("Trials")]
     public static int Trials { get; set; }
-    [JsonProperty("x_offset")]
+    [JsonProperty("vertical_offset")]
     public static float X_offset { get; set; }
-    [JsonProperty("y_offset")]
+    [JsonProperty("horizontal_offset")]
     public static float Y_offset { get; set; }
     [JsonProperty("z_offset")]
     public static float Z_offset { get; set; }

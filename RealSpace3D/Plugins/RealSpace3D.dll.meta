@@ -1,0 +1,114 @@
+fileFormatVersion: 2
+guid: 6995e5f4125da4bd183d041c1e88ea91
+timeCreated: 1476388124
+licenseType: Free
+PluginImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  iconMap: {}
+  executionOrder:
+    RealSpace3D.RealSpace3D_AudioListener: -900
+    RealSpace3D.RealSpace3D_AudioSource: -700
+    RealSpace3D.RealSpace3D_AudioSource_SpatialParameters: -600
+    RealSpace3D.RealSpace3D_Occluder: -500
+    RealSpace3D.RealSpace3D_VirtualRoom: -800
+  isPreloaded: 0
+  isOverridable: 0
+  platformData:
+  - first:
+      '': Any
+    second:
+      enabled: 0
+      settings:
+        Exclude Android: 0
+        Exclude Editor: 0
+        Exclude Linux: 0
+        Exclude Linux64: 0
+        Exclude LinuxUniversal: 0
+        Exclude OSXUniversal: 0
+        Exclude Win: 0
+        Exclude Win64: 0
+        Exclude iOS: 0
+  - first:
+      Android: Android
+    second:
+      enabled: 1
+      settings:
+        CPU: ARMv7
+  - first:
+      Any: 
+    second:
+      enabled: 1
+      settings: {}
+  - first:
+      Editor: Editor
+    second:
+      enabled: 1
+      settings:
+        CPU: AnyCPU
+        DefaultValueInitialized: true
+        OS: AnyOS
+  - first:
+      Facebook: Win
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      Facebook: Win64
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      Standalone: Linux
+    second:
+      enabled: 1
+      settings:
+        CPU: None
+  - first:
+      Standalone: Linux64
+    second:
+      enabled: 1
+      settings:
+        CPU: None
+  - first:
+      Standalone: LinuxUniversal
+    second:
+      enabled: 1
+      settings:
+        CPU: AnyCPU
+  - first:
+      Standalone: OSXUniversal
+    second:
+      enabled: 1
+      settings:
+        CPU: None
+  - first:
+      Standalone: Win
+    second:
+      enabled: 1
+      settings:
+        CPU: None
+  - first:
+      Standalone: Win64
+    second:
+      enabled: 1
+      settings:
+        CPU: None
+  - first:
+      Windows Store Apps: WindowsStoreApps
+    second:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+  - first:
+      iPhone: iOS
+    second:
+      enabled: 1
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -12,13 +12,14 @@ public class DotMotion : MonoBehaviour {
 	// Use this for initialization
 
 	void Start () {
-        if (current_direction == 0)
-        { current_angle = -1 * current_angle; }
+
         speed = Stimulus.DotSpeed / Stimulus.ApertureRad;// Aperture has scaled radius of 1 here, need to scale speed to use with local position
         movement_angle = Quaternion.Euler(0, Random.Range(0f, current_angle), 0) * transform.right;
+        if (current_direction == 1)
+        { movement_angle = -1 * movement_angle; }
         //Debug.Log("dot moving with angle of " + movement_angle.eulerAngles);
         //destination = movement_angle * new Vector3(speed * Stimulus.DotLife, 0, 0);
-        
+
     }
 
 

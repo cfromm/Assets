@@ -165,11 +165,11 @@ public class GenerateStimulus : MonoBehaviour {
             direction = thisStim.GetComponent<DotStimScript>().stim_direction;
             if (direction == 0)
             {
-                requested = "Left";
+                requested = "Right";
             }
             if (direction == 1)
             {
-                requested = "Right";
+                requested = "Left";
             }
 
         }
@@ -179,6 +179,8 @@ public class GenerateStimulus : MonoBehaviour {
 
 		GameObject response_obj = GameObject.Find("ResponseModule");
 		response_obj.GetComponent<ResponseGetter>().SetResponseEvent(requested);
+
+        DrawFixation();
     }
 
 }

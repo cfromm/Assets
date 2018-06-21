@@ -5,19 +5,15 @@ using UnityEngine;
 public class StimulusPositionUpdate : MonoBehaviour {
     SMI.SMIEyeTrackingUnity smiInstance = null;
     Vector3 cameraRaycast;
-	Vector3 offsets;
+	Quaternion offsets;
     public Vector3 sizeinUnityUnits;
 	
     // Use this for initialization
     void Start() {
         smiInstance = SMI.SMIEyeTrackingUnity.Instance;
-		offsets = new Vector3 (0f, 0f, 0f);
+		offsets = Quaternion.Euler(Experiment.X_offset, Experiment.Y_offset, 0);
 		
-		cameraRaycast = smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast();
-        
-		offsets.x = Experiment.X_offset;
-		offsets.y =	Experiment.Y_offset;
-		offsets.z = Experiment.Z_offset;
+		cameraRaycast =  smiInstance.transform.rotation * offsets * smiInstance.smi_GetCameraRaycast();
 		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
 			transform.position = smiInstance.transform.position + cameraRaycast * 10;
 		}
@@ -33,10 +29,10 @@ public class StimulusPositionUpdate : MonoBehaviour {
         cameraRaycast = smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast();
         
 		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
-            transform.position = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
+            transform.localPosition = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
            // Debug.Log("Stimulus is " + 2*Mathf.Sin(Stimulus.ApertureRad * Mathf.PI / 180f)*Stimulus.StimDepth + " meters big, viewed at " +Stimulus.StimDepth);
             transform.localScale = new Vector3(2*Mathf.Sin((Stimulus.ApertureRad*Mathf.PI)/180) * Stimulus.StimDepth, 0, 2*Mathf.Sin(Stimulus.ApertureRad * Mathf.PI / 180) * Stimulus.StimDepth);
-            //CHECK CONVERSION FROM RADIANS TO DEGREES IN THE SIN FUNCTION
+            
         }
 		
 	}
