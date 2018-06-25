@@ -33,10 +33,10 @@ public class DotMotion : MonoBehaviour {
             if (transform.localPosition.magnitude >= 0.5f)
             {
                 
-                gameObject.SetActive(false);
+               // gameObject.SetActive(false);
                 Vector2 new_dot_position = Random.insideUnitCircle * 0.5f;
                 transform.localPosition = new Vector3(new_dot_position[0], 0, new_dot_position[1]);
-                gameObject.SetActive(true);
+                //gameObject.SetActive(true);
             }
         }
  

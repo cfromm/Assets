@@ -10,6 +10,7 @@ public class DotStimScript : MonoBehaviour {
     public int stim_direction;
     public float max_angle;
     public float draw_time;
+    public float wait_time;
     List<GameObject> dots;
 
     void Start()
@@ -34,15 +35,29 @@ public class DotStimScript : MonoBehaviour {
         drawDots();
     }
 
+
+    private IEnumerator DrawAfterSeconds(float seconds, GameObject dot)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        Debug.Log("start time is: " + Time.realtimeSinceStartup);
+        dot.SetActive(true);
+        dot.GetComponent<DotMotion>().start_of_dot = Time.realtimeSinceStartup;
+        Debug.Log("recorded time is: " + Time.realtimeSinceStartup);
+
+    }
+
     void drawDots()
     {
+        wait_time = (Stimulus.Duration ) / num_dots;
 
         for(int i = 0; i < (int)num_dots; i++)
         {
             if (!dots[i].activeInHierarchy)
             {
-                dots[i].SetActive(true);
-                dots[i].GetComponent<DotMotion>().start_of_dot = Time.realtimeSinceStartup;
+                //StartCoroutine(DrawAfterSeconds(wait_time, dots[i]));
+                //dots[i].SetActive(true);
+                //dots[i].GetComponent<DotMotion>().start_of_dot = Time.realtimeSinceStartup;
+                //make a delay here based on duration of stim and dots to make them fill the time better
             }
         }
 

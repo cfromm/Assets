@@ -41,10 +41,10 @@ public class GenerateStimulus : MonoBehaviour {
 
     private IEnumerator RemoveAfterSeconds(float seconds, GameObject stimulus)
     {		
-        yield return new WaitForSeconds(seconds);
-        Debug.Log("Waiting to destroy");
+        yield return new WaitForSecondsRealtime(seconds);
+        //Debug.Log("Waiting to destroy");
         Destroy( stimulus );
-        Debug.Log("Stimulus has been destroyed");
+        //Debug.Log("Stimulus has been destroyed");
 		gameManager.stimulus_present = false;
     }
 
@@ -112,6 +112,7 @@ public class GenerateStimulus : MonoBehaviour {
             stimComponent = thisStim.GetComponent<TextMesh>();
             stimComponent.text = stims[Random.Range(0, stims.Length)];
             stimComponent.color = new Color (0f, 0f, 0f, Random.Range(var_low, var_high));
+            StartCoroutine(RemoveAfterSeconds(Stimulus.Duration, thisStim));
             return thisStim;
 		}
         if (Stimulus.Type == "d")
@@ -121,7 +122,7 @@ public class GenerateStimulus : MonoBehaviour {
             thisStim.gameObject.tag = "Stimulus";
             thisStim.GetComponent<DotStimScript>().max_angle = var_high; 
             thisStim.SetActive(true);
-            
+            StartCoroutine( RemoveAfterSeconds(Stimulus.Duration, thisStim) );
             //TimedDestroy();
             return thisStim;
 
@@ -130,7 +131,7 @@ public class GenerateStimulus : MonoBehaviour {
     
 
         Invoke("DestroyStim", Stimulus.Duration);
-        //StartCoroutine( RemoveAfterSeconds(Stimulus.Duration, thisStim) );
+        
         return thisStim;
     }
 
