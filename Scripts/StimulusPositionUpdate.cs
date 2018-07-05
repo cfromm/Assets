@@ -26,7 +26,7 @@ public class StimulusPositionUpdate : MonoBehaviour {
     /// </summary>
     void UpdateWithGazePosition()
     {
-        cameraRaycast = smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast();
+        cameraRaycast = smiInstance.transform.rotation * offsets * smiInstance.smi_GetCameraRaycast();
         
 		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
             transform.localPosition = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value

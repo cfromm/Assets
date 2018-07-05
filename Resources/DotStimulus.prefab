@@ -111,6 +111,10 @@ MonoBehaviour:
   num_dots: 0
   dot_diam_units: 0
   ap_rad_units: 0
+  stim_direction: 0
+  max_angle: 0
+  draw_time: 0
+  wait_time: 0
 --- !u!136 &136421950228150316
 CapsuleCollider:
   m_ObjectHideFlags: 1

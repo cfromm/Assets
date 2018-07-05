@@ -11,6 +11,8 @@ public class DotStimScript : MonoBehaviour {
     public float max_angle;
     public float draw_time;
     public float wait_time;
+    public float stim_start_time;
+
     List<GameObject> dots;
 
     void Start()
@@ -20,6 +22,7 @@ public class DotStimScript : MonoBehaviour {
         dot_diam_units = ((Stimulus.DotSize * Mathf.PI) / (60 * 180)) * Stimulus.StimDepth; //convert arcmin to radians (drop sin term due to small angle approx) and scale by depth
         ap_rad_units = ((Stimulus.ApertureRad * Mathf.PI) / (180)) * Stimulus.StimDepth;
         dots = new List<GameObject>();
+        stim_start_time = Time.realtimeSinceStartup;
         for (int i = 0; i < (int)num_dots; i++)
         {
             GameObject dot = (GameObject)Instantiate(Resources.Load("SingleDot"));
@@ -55,8 +58,9 @@ public class DotStimScript : MonoBehaviour {
             if (!dots[i].activeInHierarchy)
             {
                 //StartCoroutine(DrawAfterSeconds(wait_time, dots[i]));
-                //dots[i].SetActive(true);
-                //dots[i].GetComponent<DotMotion>().start_of_dot = Time.realtimeSinceStartup;
+                dots[i].SetActive(true);
+                dots[i].GetComponent<DotMotion>().start_of_dot = Time.realtimeSinceStartup;
+                dots[i].GetComponent<DotMotion>().start_of_stimulus = stim_start_time;
                 //make a delay here based on duration of stim and dots to make them fill the time better
             }
         }
