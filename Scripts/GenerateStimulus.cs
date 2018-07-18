@@ -167,10 +167,12 @@ public class GenerateStimulus : MonoBehaviour {
             if (direction == 0)
             {
                 requested = "Right";
+                Debug.Log("correct answer is: Right");
             }
             if (direction == 1)
             {
                 requested = "Left";
+                Debug.Log("correct answer is: Left");
             }
 
         }

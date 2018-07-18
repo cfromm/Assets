@@ -7,37 +7,65 @@ public class DotMotion : MonoBehaviour {
     public float current_direction; //assigned by parent, chosen randomly as 0 or 1 (left, right)
     //public Vector3 destination;
     public Quaternion movement_angle;
-    public Vector3 movement_direction;
+    public Vector3 movement_end;
     public float speed;
     public float start_of_dot;
-    public float start_of_stimulus; 
+    public float start_of_stimulus;
+    public float timeSinceStartup;
 	// Use this for initialization
 
 	void Start () {
 
         speed =  (2*Stimulus.ApertureRad)/Stimulus.DotSpeed ;// Aperture has scaled radius of 1 here, need to scale speed to use with local position
-        movement_angle = Quaternion.Euler(0, Random.Range(0f, current_angle), 0);
-
+        
+        if (current_direction == 1) //right motion
+        {
+            movement_angle = Quaternion.AngleAxis(Random.Range(0f, current_angle), Vector3.up);
+            transform.localRotation = Quaternion.identity * movement_angle;
+            //Debug.Log("movement angle is " + movement_angle.eulerAngles);
+        }
+        else //left motion
+        {
+            movement_angle = Quaternion.AngleAxis(-Random.Range(0f, current_angle), Vector3.up);
+            transform.localRotation = Quaternion.identity * movement_angle;
+           // Debug.Log("movement angle is " + movement_angle.eulerAngles);
+        }
+        //GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+        
+        //movement_direction = (movement_angle * transform.right);// + transform.localPosition;
+        //Debug.Log("Magnitude of move is:" + (movement_direction - transform.localPosition).magnitude);
+        //float angle = Vector3.Angle(transform.right, movement_direction);
         //Debug.Log("dot moving with angle of " + movement_angle.eulerAngles);
-        //destination = movement_angle * new Vector3(speed * Stimulus.DotLife, 0, 0);
-
+        //Debug.Log("Angle between is: " + angle);
+        timeSinceStartup = Time.realtimeSinceStartup;
     }
 
 
 	// Update is called once per frame
 	void Update () {
         
-
+        
         if ((Time.realtimeSinceStartup) < Stimulus.Duration + start_of_stimulus)
         {
             gameObject.SetActive(true);
+            
             if ((Time.realtimeSinceStartup) < Stimulus.DotLife + start_of_dot)
             {
-                if (current_direction == 1)
-                { transform.Translate(movement_angle * -Vector3.right * (speed / 90f), Space.Self); }
-                else { transform.Translate(movement_angle * Vector3.right * (speed / 90f), Space.Self); }
+                float deltaT = 1 / 90f;
+                transform.Translate(Vector3.right * speed* deltaT, Space.Self); 
 
-                //transform.localPosition = Vector3.MoveTowards(transform.localPosition, movement_direction, (speed * 1/90f));
+               // if (current_direction == 1)
+                //{ //transform.localPosition = -Vector3.MoveTowards(transform.localPosition, movement_direction, (speed * Time.deltaTime));
+                    
+                    
+                //}
+                // transform.position += moveAng*(Vector3.forward*speed)
+                //else {
+                    //transform.localPosition = Vector3.MoveTowards(transform.localPosition, movement_direction, (speed * Time.deltaTime));
+                //   transform.Translate(Vector3.right  * speed* deltaT, Space.Self); 
+                //}
+
+                
 
 
 
@@ -46,18 +74,20 @@ public class DotMotion : MonoBehaviour {
                     float old_x = transform.localPosition.x;
                     float old_z = transform.localPosition.z;
                     gameObject.SetActive(false);
-                    transform.localPosition = new Vector3(-old_x, 0, old_z);
-                    movement_angle = Quaternion.Euler(0, Random.Range(0f, current_angle), 0); ;
+                    transform.localPosition = new Vector3(-old_x, 0, -old_z);
+                    //movement_angle = Quaternion.Euler(0, Random.Range(0f, current_angle), 0); ;
+                    //movement_direction = (movement_angle * transform.right) + transform.localPosition;
                     gameObject.SetActive(true);
                 }
             }
             else
             {
-                Debug.Log("Respawning dot");
+               // Debug.Log("Respawning dot");
                 gameObject.SetActive(false);
                 Vector2 dot_position = Random.insideUnitCircle * 0.5f;
                 transform.localPosition = new Vector3(dot_position[0], 0, dot_position[1]);
-                movement_angle = Quaternion.Euler(0, Random.Range(0f, current_angle), 0);
+                //movement_angle = Quaternion.Euler(0, Random.Range(0f, current_angle), 0);
+                //movement_direction = (movement_angle * transform.right) + transform.localPosition;
                 start_of_dot = Time.realtimeSinceStartup;
                 gameObject.SetActive(true);
             }
@@ -65,5 +95,10 @@ public class DotMotion : MonoBehaviour {
         }
         else { gameObject.SetActive(false); }
 
+        if (Time.realtimeSinceStartup > start_of_stimulus + 0.5f)
+        {
+            //Debug.Log(transform.localPosition.magnitude);
+            //Debug.Break();
+        }
 	}
 }

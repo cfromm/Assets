@@ -115,6 +115,7 @@ MonoBehaviour:
   max_angle: 0
   draw_time: 0
   wait_time: 0
+  stim_start_time: 0
 --- !u!136 &136421950228150316
 CapsuleCollider:
   m_ObjectHideFlags: 1

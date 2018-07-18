@@ -14,8 +14,8 @@ public class StimulusPositionUpdate : MonoBehaviour {
 		offsets = Quaternion.Euler(Experiment.X_offset, Experiment.Y_offset, 0);
 		
 		cameraRaycast =  smiInstance.transform.rotation * offsets * smiInstance.smi_GetCameraRaycast();
-		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
-			transform.position = smiInstance.transform.position + cameraRaycast * 10;
+		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) && Stimulus.GazeContingent ){
+			transform.position = smiInstance.transform.position + cameraRaycast * 10;// check this 10 value
 		}
     }
 
@@ -48,7 +48,7 @@ public class StimulusPositionUpdate : MonoBehaviour {
         // Make the stimulus facing user
         if (smiInstance != null)
         {
-            transform.LookAt(smiInstance.transform);
+            transform.LookAt(smiInstance.transform); 
 
             if (Stimulus.Type == "t")
             {

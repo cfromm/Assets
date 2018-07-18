@@ -18,7 +18,9 @@ public class DotStimScript : MonoBehaviour {
     void Start()
     {
         stim_direction = Random.Range(0, 2);
+        Debug.Log("Stimulus Direction is: " + stim_direction);
         num_dots = Mathf.Pow(Stimulus.ApertureRad, 2f) * Mathf.PI * Stimulus.Density;
+        //num_dots = 1;
         dot_diam_units = ((Stimulus.DotSize * Mathf.PI) / (60 * 180)) * Stimulus.StimDepth; //convert arcmin to radians (drop sin term due to small angle approx) and scale by depth
         ap_rad_units = ((Stimulus.ApertureRad * Mathf.PI) / (180)) * Stimulus.StimDepth;
         dots = new List<GameObject>();
@@ -28,6 +30,7 @@ public class DotStimScript : MonoBehaviour {
             GameObject dot = (GameObject)Instantiate(Resources.Load("SingleDot"));
             dot.transform.parent = transform;
             Vector2 dot_position = Random.insideUnitCircle * 0.5f;
+            //Vector2 dot_position = new Vector2(0,0);
             dot.transform.localPosition = new Vector3(dot_position[0], 0, dot_position[1]);
             dot.transform.localScale = new Vector3(dot_diam_units/(2*ap_rad_units), 0, dot_diam_units/(2*ap_rad_units));
             dot.GetComponent<DotMotion>().current_angle = max_angle;

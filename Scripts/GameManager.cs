@@ -409,7 +409,7 @@ public class GameManager : MonoBehaviour {
         rightBasePoint = smiInstance.transform.position + smiInstance.transform.rotation * smiInstance.smi_GetRightGazeBase();
         leftGazeDirection = smiInstance.transform.rotation * smiInstance.smi_GetLeftGazeDirection();
         rightGazeDirection = smiInstance.transform.rotation * smiInstance.smi_GetRightGazeDirection();
-		
+        //Debug.Log(Time.deltaTime);
 		DrawRay();
 		
 		if( Input.GetKeyDown(trigger1) ){		
