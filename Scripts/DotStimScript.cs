@@ -25,6 +25,7 @@ public class DotStimScript : MonoBehaviour {
         ap_rad_units = ((Stimulus.ApertureRad * Mathf.PI) / (180)) * Stimulus.StimDepth;
         dots = new List<GameObject>();
         stim_start_time = Time.realtimeSinceStartup;
+        Debug.Log("Coherence at " + max_angle);
         for (int i = 0; i < (int)num_dots; i++)
         {
             GameObject dot = (GameObject)Instantiate(Resources.Load("SingleDot"));
@@ -34,6 +35,7 @@ public class DotStimScript : MonoBehaviour {
             dot.transform.localPosition = new Vector3(dot_position[0], 0, dot_position[1]);
             dot.transform.localScale = new Vector3(dot_diam_units/(2*ap_rad_units), 0, dot_diam_units/(2*ap_rad_units));
             dot.GetComponent<DotMotion>().current_angle = max_angle;
+            
             dot.GetComponent<DotMotion>().current_direction = stim_direction;
             dot.SetActive(false);
             dots.Add(dot);

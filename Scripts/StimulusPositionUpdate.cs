@@ -27,11 +27,12 @@ public class StimulusPositionUpdate : MonoBehaviour {
     void UpdateWithGazePosition()
     {
         cameraRaycast = smiInstance.transform.rotation * offsets * smiInstance.smi_GetCameraRaycast();
+        //Debug.Log("mag is: "+  cameraRaycast.magnitude);
         
 		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
-            transform.localPosition = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
+            transform.position = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
            // Debug.Log("Stimulus is " + 2*Mathf.Sin(Stimulus.ApertureRad * Mathf.PI / 180f)*Stimulus.StimDepth + " meters big, viewed at " +Stimulus.StimDepth);
-            transform.localScale = new Vector3(2*Mathf.Sin((Stimulus.ApertureRad*Mathf.PI)/180) * Stimulus.StimDepth, 0, 2*Mathf.Sin(Stimulus.ApertureRad * Mathf.PI / 180) * Stimulus.StimDepth);
+            transform.localScale = new Vector3(2*Mathf.Tan((Stimulus.ApertureRad*Mathf.PI)/180) * Stimulus.StimDepth, 0, 2*Mathf.Tan(Stimulus.ApertureRad * Mathf.PI / 180) * Stimulus.StimDepth);
             
         }
 		
@@ -44,7 +45,8 @@ public class StimulusPositionUpdate : MonoBehaviour {
         //set up size conversions to degrees here
         if (Stimulus.GazeContingent)
         { UpdateWithGazePosition(); }
-
+        //transform.localPosition = new Vector3 (1, 1, 1);
+        //transform.localScale = new Vector3(2f, 0.01f, 2f);
         // Make the stimulus facing user
         if (smiInstance != null)
         {
