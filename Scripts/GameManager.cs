@@ -106,13 +106,20 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="isTrue">Does the user response match the stimulus</param>
 	public void UserResponse( bool isTrue )
-	{
-		trial_success = isTrue;
+    {
+        AudioSource sounds = GetComponent<AudioSource>();
+        trial_success = isTrue;
 		if( trial_success )
 		{
-			TrialCounter(1);
+            sounds.clip = success_sound;
+            sounds.Play();
+            TrialCounter(1);
+            Debug.Log("Correct!");
 		} else
 		{
+            sounds.clip = fail_sound;
+            sounds.Play();
+            Debug.Log("Incorrect");
 			TrialCounter(0);
 		}
 	}
@@ -160,8 +167,7 @@ public class GameManager : MonoBehaviour {
                 { level_1 = Experiment.Num_Levels - 1; }
 				running_consecutive_correct_1 -= 3;
 			}
-			sounds.clip = success_sound;
-            sounds.Play();
+
 		} 
         if (score <= 0 && current_staircase== 1)
 		{
@@ -170,8 +176,7 @@ public class GameManager : MonoBehaviour {
 			{
 				level_1 -= 1;
 			}
-            sounds.clip = fail_sound;
-            sounds.Play();
+
 		}
 
         if (score > 0 && current_staircase == 2)
@@ -185,8 +190,6 @@ public class GameManager : MonoBehaviour {
                 running_consecutive_correct_2 -= 3;
 
             }
-            sounds.clip = success_sound;
-            sounds.Play();
         }
         if (score <= 0 && current_staircase == 2)
         {
@@ -195,8 +198,7 @@ public class GameManager : MonoBehaviour {
             {
                 level_2 -= 1;
             }
-            sounds.clip = fail_sound;
-            sounds.Play();
+
         }
 
         if (score > 0 && current_staircase == 3)
@@ -209,8 +211,7 @@ public class GameManager : MonoBehaviour {
                 { level_3 = Experiment.Num_Levels - 1; }
                 running_consecutive_correct_3 -= 3;
             }
-            sounds.clip = success_sound;
-            sounds.Play();
+
         }
         if (score > 0 && current_staircase == 3)
             {
@@ -219,8 +220,7 @@ public class GameManager : MonoBehaviour {
             {
                 level_3 -= 1;
             }
-            sounds.clip = fail_sound;
-            sounds.Play();
+
         }
 
         // Destroy the stimulus and set generate_state back to true

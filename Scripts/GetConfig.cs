@@ -65,6 +65,8 @@ public class Experiment
     public static int Stair2_Init { get; set; }
     [JsonProperty("Staricase3_Initial")]
     public static int Stair3_Init { get; set; }
+    [JsonProperty("InputPadAxis")]
+    public static string InputAxis { get; set; }
 
 }
 

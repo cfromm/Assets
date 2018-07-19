@@ -14,8 +14,9 @@
     "z_offset": "0",
     "Pause_time": "1",
     "Staircase1_Initial": "0",
-    "Staircase2_Initial": "2",
-    "Staircase3_Initial": "4"
+    "Staircase2_Initial": "5",
+    "Staircase3_Initial": "7",
+    "InputPadAxis":  "horizontal"
   },
   "Stimulus_Params": {
     "Type": "d",

@@ -60,6 +60,11 @@ public class GenerateStimulus : MonoBehaviour {
 			gameManager.stimulus_present = false;
 		}		
 	}
+    private void DestroyFixation()
+    {
+        if (fixationCross != null)
+        { Destroy(fixationCross); }
+    }
 
 	/// <summary>
 	/// This function sets the color range of the stimulus
@@ -123,7 +128,6 @@ public class GenerateStimulus : MonoBehaviour {
             thisStim.GetComponent<DotStimScript>().max_angle = var_high; 
             thisStim.SetActive(true);
             StartCoroutine( RemoveAfterSeconds(Stimulus.Duration, thisStim) );
-            //TimedDestroy();
             return thisStim;
 
         }
@@ -139,8 +143,9 @@ public class GenerateStimulus : MonoBehaviour {
     public void DrawFixation()
     {
         fix_position = new Vector3(Experiment.X_Fixation, Experiment.Y_Fixation, Experiment.Z_Fixation);
-        GameObject fixationCross = (GameObject)Instantiate(Resources.Load("FixationCross"));
+        fixationCross = (GameObject)Instantiate(Resources.Load("FixationCross"));
         fixationCross.transform.position = fix_position;
+        Invoke("DestroyFixation", Stimulus.Duration);
     }
 
 	
@@ -163,7 +168,8 @@ public class GenerateStimulus : MonoBehaviour {
         }
         if (Stimulus.Type == "d")
         {
-            direction = thisStim.GetComponent<DotStimScript>().stim_direction;
+            direction = Random.Range(0, 2);
+            thisStim.GetComponent<DotStimScript>().stim_direction = direction;
             if (direction == 0)
             {
                 requested = "Right";

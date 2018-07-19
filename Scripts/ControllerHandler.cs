@@ -95,6 +95,8 @@ public class ControllerHandler : SteamVR_TrackedController {
 	/// </summary>
 	public void DeterminPadDirection(){
 		Vector2 direction = unTouchPos - touchPos;
+
+        if (Experiment.InputAxis == "vertical")
 		if( direction.y > 0.3 ){
 			Debug.Log("Up");
 			response_script.GetSwipeResponse(0);
@@ -102,13 +104,19 @@ public class ControllerHandler : SteamVR_TrackedController {
 			Debug.Log("Down");
 			response_script.GetSwipeResponse(1);
 		}
-		if( direction.x < -0.3 ){
-			Debug.Log("User entered: Left");
-			response_script.GetSwipeResponse(2);
-		} else if( direction.x > 0.3 ){
-			Debug.Log("User entered: Right");
-			response_script.GetSwipeResponse(3);
-		}
+        if (Experiment.InputAxis == "horizontal")
+        {
+            if (direction.x < -0.3)
+            {
+                Debug.Log("User entered: Left");
+                response_script.GetSwipeResponse(2);
+            }
+            else if (direction.x > 0.3)
+            {
+                Debug.Log("User entered: Right");
+                response_script.GetSwipeResponse(3);
+            }
+        }
 	}
 	
 }
