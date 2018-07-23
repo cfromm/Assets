@@ -1,10 +1,12 @@
 {
   "Experiment_Params": {
     "InputMethod": "s",
-    "SaveBool" :  "false",
+    "SaveBool": "true",
+    "WriteTrialData": "true",
+    "WriteFrameData": "false",
     "SaveLocation": "D:\\Data\\CBRecoveryVive\\",
     "Staircase_ratio": "3",
-    "Trials": "200",
+    "Trials": "10",
     "Num_Levels": "10",
     "X_Fixation": "0.42",
     "Y_Fixation": "1.5",
@@ -23,7 +25,7 @@
     "Letter": "E,H,F,R,B,P",
     "Height": "0.5",
     "Max_Color": "1",
-    "Duration": "2",
+    "Duration": "0.5",
     "GazeContingent": "true",
     "Angle": "0,40,80,120,160,200,240,280,320,355",
     "ApertureRad": "2.5",
@@ -31,7 +33,7 @@
     "Density": "3.5",
     "SizeArcmin": "14",
     "SpeedInDegreesPerSec": "5",
-    "IndividualLifetime": "1",
+    "IndividualLifetime": "0.25",
     "Directions": "Left,Right",
     "2Dor3D": "2",
     "StimDepthMeters": "0.42"

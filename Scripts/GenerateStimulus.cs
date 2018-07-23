@@ -96,6 +96,7 @@ public class GenerateStimulus : MonoBehaviour {
 
             string[] angles = Stimulus.Angle.Split(',');
             var_high = float.Parse(angles[gameManager.current_level]);
+            gameManager.current_angle = var_high.ToString();
         }
 	}
     
@@ -173,11 +174,13 @@ public class GenerateStimulus : MonoBehaviour {
             if (direction == 0)
             {
                 requested = "Right";
+                gameManager.current_direction = "Right";
                 Debug.Log("correct answer is: Right");
             }
             if (direction == 1)
             {
                 requested = "Left";
+                gameManager.current_direction = "Left";
                 Debug.Log("correct answer is: Left");
             }
 

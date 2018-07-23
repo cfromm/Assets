@@ -38,7 +38,11 @@ public class Experiment
     [JsonProperty("InputMethod")]
     public static string InputMethod { get; set; }
     [JsonProperty("SaveBool")]
-    public static bool SaveBool { get; set; } 
+    public static bool SaveBool { get; set; }
+    [JsonProperty("WriteTrialData")]
+    public static bool WriteTrialData { get; set; }
+    [JsonProperty("WriteFrameData")]
+    public static bool WriteFrameData { get; set; }
     [JsonProperty("SaveLocation")]
     public static string SaveLocation { get; set; }
     [JsonProperty("Staircase_ratio")]

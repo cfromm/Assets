@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour {
     {
 		if( generate_state ){
 			trial_number += 1;
-            current_staircase = UnityEngine.Random.Range(0, 4);
+            current_staircase = UnityEngine.Random.Range(1, 4);
 			EventManager.TriggerEvent("spawnStim");
 			generate_state = false;
 			stimulus_present = true;
@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour {
             }
 
         }
-        if (score > 0 && current_staircase == 3)
+        if (score <= 0 && current_staircase == 3)
             {
             running_consecutive_correct_3 = 0;
             if (level_3 > 0)
@@ -240,6 +240,15 @@ public class GameManager : MonoBehaviour {
 				current_color + Environment.NewLine
 			);
 		}
+        if (Stimulus.Type.Equals("d"))
+        {
+            stringBuilder.Append
+            (
+                trial_number + "\t\t" + stimStartTime + "\t" + Time.time * 1000 + "\t" +
+                current_angle + "\t"  + current_staircase + "\t\t" +
+                trial_success + Environment.NewLine
+            );
+        }
         if (SaveBool)
         {
             writeString = stringBuilder.ToString();
@@ -272,11 +281,11 @@ public class GameManager : MonoBehaviour {
             Directory.CreateDirectory(outputDir);
 
             // create a file inside the folder based on the current time
-            String outFileName = Path.Combine(outputDir, DateTime.Now.ToString("HH-mm") + ".txt");
+            String outFileName = Path.Combine(outputDir, DateTime.Now.ToString("yyyy-MM-dd-HH-mm") + "_Parameters.txt");
             streams = new FileStream(outFileName, FileMode.Create, FileAccess.Write);
 
             // create another file to record trial results
-            String trialOutput = Path.Combine(outputDir, DateTime.Now.ToString("Trial-HH-mm") + ".txt");
+            String trialOutput = Path.Combine(outputDir, DateTime.Now.ToString("yyyy-MM-dd-HH-mm") + "_Results.txt");
             trialStreams = new FileStream(trialOutput, FileMode.Create, FileAccess.Write);
 
             WriteHeader();
@@ -315,17 +324,23 @@ public class GameManager : MonoBehaviour {
 		
 		// trial output file
 		stringBuilder.Length = 0;
-		if( Stimulus.Type.Equals("t") ){					
-			stringBuilder.Append(
-				"Trial#\t" + "Start\t\t" + "End\t\t\t"  + "Correct\t" +
-				"Exp.type\t" + "Sti.type\t" + "Res.type\t" + 
-				"Text\t" + "Color\t\t\t\t\t\t\t" + Environment.NewLine
-			);
-			stringBuilder.Append(
-				"-----------------------------------------------------------------------" + 
-				Environment.NewLine
-			);			
-		} else{
+        if (Stimulus.Type.Equals("t")) {
+            stringBuilder.Append(
+                "Trial#\t" + "Start\t\t" + "End\t\t\t" + "Correct\t" +
+                "Exp.type\t" + "Sti.type\t" + "Res.type\t" +
+                "Text\t" + "Color\t\t\t\t\t\t\t" + Environment.NewLine
+            );
+            stringBuilder.Append(
+                "-----------------------------------------------------------------------" +
+                Environment.NewLine
+            ); }
+        if (Stimulus.Type == "d")
+            {
+                stringBuilder.Append(
+                    "TrialNumber\t" +"StartTime\t" + "EndTime\t"+ "CoherenceAngle\t" + "StaircaseNumber\t" + "Response\t" + Environment.NewLine
+                    );
+            }
+		else{
 			stringBuilder.Append(
 				"Other types are not yet supported."
 			);
@@ -350,43 +365,45 @@ public class GameManager : MonoBehaviour {
     void WriteFile()
     {
         stringBuilder.Length = 0;
-		
-		// User's info
-        stringBuilder.Append(
-            "Time Stamp: " + Time.time * 1000 + "\t" +
-            "User's Position: " + smiInstance.transform.position + "\t" +
-            "User's Rotation: " + smiInstance.transform.eulerAngles  + Environment.NewLine
-            );
-			
-		// SMI eye tracker's info
-        stringBuilder.Append(
-            "cameraRaycast: " + cameraRaycast.ToString("G4") + "\t" +
-            "binocularPor: " + binocularPor + "\t" +
-            " ipd: " + ipd + "\t" + 
-			"leftPor: " + leftPor + "\t" +
-            "rightPor: " + rightPor + Environment.NewLine
-            );   		
-		stringBuilder.Append(
-            "leftBasePoint: " + leftBasePoint + "\t" +
-            "rightBasePoint: " + rightBasePoint  + Environment.NewLine
-            );
-		stringBuilder.Append(
-            "leftGazeDirection: " + leftGazeDirection + "\t" +
-            "rightGazeDirection: " + rightGazeDirection + Environment.NewLine
-            );
-		
-		// Stimulus info
-		stringBuilder.Append(
-			"Trial number: " + trial_number + "\t" +
-			"Stimulus present: " + stimulus_present + "\t" +
-			"Experiment type: " + "a" + "\t" +
-			"Stimulus type: " + Stimulus.Type + "\t" +
-			"Response type: " + Experiment.InputMethod + "\t" +
-			//"level: " + current_level + "\t" +
-			"Text: " + current_text + "\t" +
-			Environment.NewLine
-            );
-		
+        if (Experiment.WriteFrameData)
+        {
+            // User's info
+            stringBuilder.Append(
+                "Time Stamp: " + Time.time * 1000 + "\t" +
+                "User's Position: " + smiInstance.transform.position + "\t" +
+                "User's Rotation: " + smiInstance.transform.eulerAngles + Environment.NewLine
+                );
+
+            // SMI eye tracker's info
+            stringBuilder.Append(
+                "cameraRaycast: " + cameraRaycast.ToString("G4") + "\t" +
+                "binocularPor: " + binocularPor + "\t" +
+                " ipd: " + ipd + "\t" +
+                "leftPor: " + leftPor + "\t" +
+                "rightPor: " + rightPor + Environment.NewLine
+                );
+            stringBuilder.Append(
+                "leftBasePoint: " + leftBasePoint + "\t" +
+                "rightBasePoint: " + rightBasePoint + Environment.NewLine
+                );
+            stringBuilder.Append(
+                "leftGazeDirection: " + leftGazeDirection + "\t" +
+                "rightGazeDirection: " + rightGazeDirection + Environment.NewLine
+                );
+        }
+
+        if (Experiment.WriteTrialData && Stimulus.Type == "d")
+        {
+            // Stimulus info
+            stringBuilder.Append(
+                "Trial number: " + trial_number + "\t" +
+                "Coherence Angle: " + stimulus_present + "\t" +
+                "Staircase Number" + current_staircase + "\t" +
+                "Response: " + trial_success + "\t" +
+                //"level: " + current_level + "\t" +
+                Environment.NewLine
+                );
+        }
         writeString = stringBuilder.ToString();
         writebytes = Encoding.ASCII.GetBytes(writeString);
         streams.Write(writebytes, 0, writebytes.Length);
@@ -421,9 +438,13 @@ public class GameManager : MonoBehaviour {
 			}
 		} 
 				
-		if( startWrite && SaveBool){
+		if( startWrite && SaveBool && Experiment.WriteFrameData){
 			WriteFile();
 		}
+        if( startWrite && SaveBool && Experiment.WriteTrialData)
+        {
+            //on response
+        }
 		
     }
 	
