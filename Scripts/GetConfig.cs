@@ -63,6 +63,8 @@ public class Experiment
     public static float Y_Fixation { get; set; }
     [JsonProperty("Z_Fixation")]
     public static float Z_Fixation { get; set; }
+    [JsonProperty("FixationRadiusDeg")]
+    public static float FixationRad { get; set; }
     [JsonProperty("Staricase1_Initial")]
     public static int Stair1_Init { get; set; }
     [JsonProperty("Staricase2_Initial")]

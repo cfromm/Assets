@@ -20,6 +20,7 @@ public class DotStimScript : MonoBehaviour {
         //stim_direction = Random.Range(0, 2);
         Debug.Log("Stimulus Direction is: " + stim_direction);
         num_dots = Mathf.Pow(Stimulus.ApertureRad, 2f) * Mathf.PI * Stimulus.Density;
+        //num_dots = 5;
         dot_diam_units = ((Stimulus.DotSize * Mathf.PI) / (60 * 180)) * Stimulus.StimDepth; //convert arcmin to radians (drop sin term due to small angle approx) and scale by depth
         ap_rad_units = ((Stimulus.ApertureRad * Mathf.PI) / (180)) * Stimulus.StimDepth;
         dots = new List<GameObject>();

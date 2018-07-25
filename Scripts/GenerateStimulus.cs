@@ -144,8 +144,8 @@ public class GenerateStimulus : MonoBehaviour {
     public void DrawFixation()
     {
         fix_position = new Vector3(Experiment.X_Fixation, Experiment.Y_Fixation, Experiment.Z_Fixation);
-        fixationCross = (GameObject)Instantiate(Resources.Load("FixationCross"));
-        fixationCross.transform.position = fix_position;
+        fixationCross = (GameObject)Instantiate(Resources.Load("FixationDot"));
+        //fixationCross.transform.position = fix_position;
         Invoke("DestroyFixation", Stimulus.Duration);
     }
 
