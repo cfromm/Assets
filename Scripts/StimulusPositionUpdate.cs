@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class StimulusPositionUpdate : MonoBehaviour {
     SMI.SMIEyeTrackingUnity smiInstance = null;
-    Vector3 cameraRaycast;
+    Vector3 gazeRaycast;
+    public Vector3 cyclopeanGazeDirection;
+    public Vector3 cyclopeanBasePoint; 
 	Quaternion offsets;
     public Vector3 sizeinUnityUnits;
 	
@@ -14,9 +16,9 @@ public class StimulusPositionUpdate : MonoBehaviour {
 		offsets = Quaternion.Euler(Experiment.X_offset, Experiment.Y_offset, 0);
 
         //cameraRaycast = smiInstance.transform.rotation * offsets;
-        cameraRaycast =  smiInstance.transform.rotation * offsets * smiInstance.smi_GetCameraRaycast();
-		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) && Stimulus.GazeContingent ){
-			transform.position = smiInstance.transform.position + cameraRaycast * 10;
+        gazeRaycast =  smiInstance.transform.rotation * offsets * (smiInstance.smi_GetLeftGazeDirection() + smiInstance.smi_GetRightGazeDirection()) * 0.5f + (smiInstance.smi_GetLeftGazeBase() + smiInstance.smi_GetRightGazeBase()) * 0.5f;
+		if( !float.IsNaN(gazeRaycast.x) && !float.IsNaN(gazeRaycast.y) && !float.IsNaN(gazeRaycast.z) && Stimulus.GazeContingent ){
+			transform.position = smiInstance.transform.position + gazeRaycast * 10;
 		}
     }
 
@@ -27,10 +29,12 @@ public class StimulusPositionUpdate : MonoBehaviour {
     /// </summary>
     void UpdateWithGazePosition()
     {
-        cameraRaycast = smiInstance.transform.rotation * offsets * smiInstance.smi_GetCameraRaycast();
+        cyclopeanBasePoint = (smiInstance.smi_GetLeftGazeBase() + smiInstance.smi_GetRightGazeBase()) * 0.5f;
+        cyclopeanGazeDirection = (smiInstance.smi_GetLeftGazeDirection() + smiInstance.smi_GetRightGazeDirection()) * 0.5f;
+        gazeRaycast = smiInstance.transform.rotation * offsets * cyclopeanGazeDirection + cyclopeanBasePoint;
         //cameraRaycast =  smiInstance.transform.forward;
-		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
-            transform.position = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
+        if ( !float.IsNaN(gazeRaycast.x) && !float.IsNaN(gazeRaycast.y) && !float.IsNaN(gazeRaycast.z) ){
+            transform.position = smiInstance.transform.position + gazeRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
             //transform.position = new Vector3 (smiInstance.transform.position.x + Stimulus.StimDepth, smiInstance.transform.position.y , smiInstance.transform.position.z );
             //transform.rotation = smiInstance.transform.rotation;
             transform.localScale = new Vector3(2*Mathf.Tan((Stimulus.ApertureRad*Mathf.PI)/180) * Stimulus.StimDepth, 0, 2*Mathf.Tan(Stimulus.ApertureRad * Mathf.PI / 180) * Stimulus.StimDepth);

@@ -9,6 +9,8 @@ public class FixationPositionUpdate : MonoBehaviour {
     Quaternion offsets;
     public Vector3 sizeinUnityUnits;
     public Vector3 displacementVector;
+    public Vector3 cyclopeanBasePoint;
+    public Vector3 cyclopeanGazeDirection;
     public Vector3 gazeVector;
     public float angularError;
 
@@ -31,10 +33,12 @@ public class FixationPositionUpdate : MonoBehaviour {
     /// </summary>
     void UpdateWithGazePosition()
     {
-        fixationRaycast = smiInstance.transform.forward;
+        cyclopeanBasePoint = (smiInstance.smi_GetLeftGazeBase() + smiInstance.smi_GetRightGazeBase()) * 0.5f;
+        cyclopeanGazeDirection = (smiInstance.smi_GetLeftGazeDirection() + smiInstance.smi_GetRightGazeDirection()) * 0.5f;
+        fixationRaycast = smiInstance.transform.forward + cyclopeanBasePoint;
         if (!float.IsNaN(fixationRaycast.x) && !float.IsNaN(fixationRaycast.y) && !float.IsNaN(fixationRaycast.z))
         {
-            gazeVector = smiInstance.transform.position + smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth;
+            gazeVector = smiInstance.transform.position + cyclopeanBasePoint + smiInstance.transform.rotation * offsets * cyclopeanGazeDirection * Stimulus.StimDepth ;
             transform.position = smiInstance.transform.position + fixationRaycast * Stimulus.StimDepth;
             displacementVector = gazeVector - transform.position;//scales magnitude of position by desired value
             transform.localScale = new Vector3(2 * Mathf.Tan((Experiment.FixationRad * Mathf.PI) / 180) * Stimulus.StimDepth, 0, 2 * Mathf.Tan(Experiment.FixationRad * Mathf.PI / 180) * Stimulus.StimDepth);
