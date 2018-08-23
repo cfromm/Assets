@@ -23,6 +23,7 @@ public class GenerateStimulus : MonoBehaviour {
 	
 	private float var_low;
 	public float var_high;
+    private IEnumerator wait;
 
     private void Awake()
     {
@@ -50,6 +51,15 @@ public class GenerateStimulus : MonoBehaviour {
         Destroy( stimulus );
         //Debug.Log("Stimulus has been destroyed");
 		gameManager.stimulus_present = false;
+    }
+
+    private IEnumerator waitITI(float seconds, AudioSource source)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        Debug.Log("waiting for intertrial interval");
+        thisStim.SetActive(true);
+        source.clip = onset_sound;
+        source.Play();
     }
 
 
@@ -192,12 +202,13 @@ public class GenerateStimulus : MonoBehaviour {
             }
 
         }
+        
+        if (gameManager.angular_gaze_error < 100)
+        {
+            wait = waitITI(Stimulus.ITI, audio);
+            StartCoroutine(wait);
 
-        if (gameManager.angular_gaze_error < 0.9)
-        { 
-            thisStim.SetActive(true);
-            audio.clip = onset_sound;
-            audio.Play();
+
         }
         else {
             //Invoke("DestroyFixation", 0.01f);
