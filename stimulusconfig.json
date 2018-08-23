@@ -32,7 +32,7 @@
     "FixationDurationRequired": "250",
     "Angle": "0,40,80,120,160,200,240,280,320,355",
     "ApertureRad": "2.5",
-    "InterTrialInterval": "1.5",
+    "InterTrialInterval": "0",
     "Density": "3.5",
     "SizeArcmin": "14",
     "SpeedInDegreesPerSec": "5",

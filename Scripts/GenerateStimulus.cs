@@ -205,6 +205,7 @@ public class GenerateStimulus : MonoBehaviour {
         
         if (gameManager.angular_gaze_error < 100)
         {
+            Debug.Log(gameManager.angular_gaze_error);
             wait = waitITI(Stimulus.ITI, audio);
             StartCoroutine(wait);
 

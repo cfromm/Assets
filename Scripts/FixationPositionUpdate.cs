@@ -36,7 +36,9 @@ public class FixationPositionUpdate : MonoBehaviour {
         if (!float.IsNaN(fixationRaycast.x) && !float.IsNaN(fixationRaycast.y) && !float.IsNaN(fixationRaycast.z))
         {
             gazeVector = smiInstance.transform.position + smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth;
+            Debug.DrawRay(smiInstance.transform.position, smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth, Color.green);
             transform.position = smiInstance.transform.position + fixationRaycast * Stimulus.StimDepth;
+            Debug.DrawRay(smiInstance.transform.position, fixationRaycast * Stimulus.StimDepth, Color.yellow);
             displacementVector = gazeVector - transform.position;
             transform.localScale = new Vector3(2 * Mathf.Tan((Experiment.FixationRad * Mathf.PI) / 180) * Stimulus.StimDepth, 0, 2 * Mathf.Tan(Experiment.FixationRad * Mathf.PI / 180) * Stimulus.StimDepth);
         }
@@ -49,7 +51,7 @@ public class FixationPositionUpdate : MonoBehaviour {
         //set up size conversions to degrees here
         if (Stimulus.GazeContingent)
         { UpdateWithGazePosition();
-            angularError = 2*Mathf.Atan(displacementVector.magnitude /2*Stimulus.StimDepth)*180/Mathf.PI;
+            angularError = 2*Mathf.Sin((displacementVector.magnitude /2)/Stimulus.StimDepth)*180/Mathf.PI;
             gameManager.angular_gaze_error = angularError;
             //Debug.Log(angularError);
         }
