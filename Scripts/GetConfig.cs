@@ -35,6 +35,8 @@ public class Experiment
 {
     // Use the JsonProperty tag to make these global variables, accessible from any script. 
     // Variable name must match its tag's name (lower upper case does not matter).
+    [JsonProperty("SubjectInitials")]
+    public static string SubjectIntials { get; set; }
     [JsonProperty("InputMethod")]
     public static string InputMethod { get; set; }
     [JsonProperty("SaveBool")]
@@ -90,6 +92,8 @@ public class Stimulus
     public static float Duration { get; set; }
     [JsonProperty("GazeContingent")]
     public static bool GazeContingent { get; set; }
+    [JsonProperty("FixationDurationRequired")]
+    public static float FixationDuration { get; set; }
     [JsonProperty("Angle")]
     public static string Angle { get; set; }
     [JsonProperty("ApertureRad")]

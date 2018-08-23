@@ -20,10 +20,12 @@ public class GameManager : MonoBehaviour {
     public int running_consecutive_correct_3 = 0;
     public bool generate_state;	// if the scene is ready to generate the next stimulus
     public bool fixation;
+    public float angular_gaze_error;
     //private bool response_match; //whether the user response is correct
     public int trial_number = 0;
-	public bool trial_success = false;	//whether the user response is correct
-	public bool stimulus_present = false;
+	public bool trial_success = false;  //whether the user response is correct
+    public bool fixation_break = false; //whether the user breaks fixation during the trial
+    public bool stimulus_present = false;
     public Color current_color;
 	public string current_text;
     public string current_angle;
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour {
 	private float stimStartTime;
     public AudioClip success_sound;
     public AudioClip fail_sound;
+    public AudioClip complete_sound;
     
 
 	SMI.SMIEyeTrackingUnity smiInstance = null;
@@ -105,23 +108,30 @@ public class GameManager : MonoBehaviour {
 	/// This function is called after the user answers
 	/// </summary>
 	/// <param name="isTrue">Does the user response match the stimulus</param>
-	public void UserResponse( bool isTrue )
+	public void UserResponse( bool isTrue, bool brokeFixation)
     {
         AudioSource sounds = GetComponent<AudioSource>();
         trial_success = isTrue;
-		if( trial_success )
+		if( trial_success && !brokeFixation)
 		{
             sounds.clip = success_sound;
             sounds.Play();
             TrialCounter(1);
             Debug.Log("Correct!");
-		} else
+		} 
+        if(!trial_success && !brokeFixation)
 		{
             sounds.clip = fail_sound;
             sounds.Play();
             Debug.Log("Incorrect");
 			TrialCounter(0);
 		}
+        //if (brokeFixation)
+        //{
+        //    EventManager.TriggerEvent("DestroyStim");
+        //    generate_state = true;
+        //    stimulus_present = false;
+        //    Debug.Log("Trial not logged due to fixation loss"); }
 	}
 	
 	/// <summary>
@@ -129,7 +139,7 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="isTrue">Does the user response match the stimulus</param>
 	/// <param name="isPoint">Does the user point at the stimulus</param>
-	public void UserResponse( bool isTrue, bool isPoint )
+	public void UserResponse( bool isTrue, bool isPoint, bool isFixated )
 	{
 		trial_success = isTrue && isPoint;      
 		if( trial_success )
@@ -225,6 +235,8 @@ public class GameManager : MonoBehaviour {
 
         // Destroy the stimulus and set generate_state back to true
         EventManager.TriggerEvent("DestroyStim");
+        //EventManager.TriggerEvent("DestroyFixation");
+
 		generate_state = true;
 		stimulus_present = false;
 	
@@ -259,10 +271,21 @@ public class GameManager : MonoBehaviour {
         if (trial_number >= Experiment.Trials)
         {
             ExperimentComplete = true;
-			Debug.Log("Experiment Complete.");			
+            sounds.clip = complete_sound;
+            sounds.Play();
+			Debug.Log("Experiment Complete.");
+            StopEditorPlayback();
+            Application.Quit();
         }
     }
 
+    void StopEditorPlayback()
+    {
+      if (Application.isEditor)
+        { 
+        UnityEditor.EditorApplication.isPlaying = false;
+        }
+    }
 
     public void Start()
     {
@@ -277,7 +300,7 @@ public class GameManager : MonoBehaviour {
         if (SaveBool)
         {
             // create a folder based on "SaveLocation" from Json file and today's date
-            String outputDir = Path.Combine(Experiment.SaveLocation, DateTime.Now.ToString("MM-dd-yyyy"));
+            String outputDir = Path.Combine(Experiment.SaveLocation, string.Concat(DateTime.Now.ToString("MM-dd-yyyy"), Experiment.SubjectIntials));
             Directory.CreateDirectory(outputDir);
 
             // create a file inside the folder based on the current time

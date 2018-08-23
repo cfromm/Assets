@@ -88,7 +88,7 @@ public class ResponseGetter : MonoBehaviour {
 				Debug.Log( "User entered: " + user_resp );
 				
 				bool isTrue = true_val.Equals(user_resp);			
-				gameManager.UserResponse(isTrue);
+				gameManager.UserResponse(isTrue, gameManager.fixation_break);
 				
 				// Finish judging, no longer waiting for response
 				ResetMonitorParam();
@@ -130,10 +130,10 @@ public class ResponseGetter : MonoBehaviour {
 					( true_val.Equals("Left") && user_direction[2] ) ||
 					( true_val.Equals("Right") && user_direction[3] ) )
 				{
-					gameManager.UserResponse(true);
+					gameManager.UserResponse(true, gameManager.fixation_break);
 				} else
 				{ 
-					gameManager.UserResponse(false); 
+					gameManager.UserResponse(false, gameManager.fixation_break); 
 				}
 				
 				ResetMonitorParam();
@@ -145,11 +145,20 @@ public class ResponseGetter : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{		
-		if( waitingforResponse )
+		if( waitingforResponse && !gameManager.fixation_break )
 		{
 			InputJudge();
 		}
+        if(gameManager.fixation_break)
+        {
+            ResetMonitorParam();
+            EventManager.TriggerEvent("DestroyStim");
+            gameManager.generate_state = true;
+            gameManager.stimulus_present = false;
+            gameManager.fixation_break = false;
+            Debug.Log("Trial not logged due to fixation loss");
+        }
+    }
 	}
 	
-}
 

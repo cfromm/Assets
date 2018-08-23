@@ -11,6 +11,7 @@ public class FixationPositionUpdate : MonoBehaviour {
     public Vector3 displacementVector;
     public Vector3 gazeVector;
     public float angularError;
+    public GameManager gameManager = GameManager.instance;
 
 
     // Use this for initialization
@@ -36,7 +37,7 @@ public class FixationPositionUpdate : MonoBehaviour {
         {
             gazeVector = smiInstance.transform.position + smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth;
             transform.position = smiInstance.transform.position + fixationRaycast * Stimulus.StimDepth;
-            displacementVector = gazeVector - transform.position;//scales magnitude of position by desired value
+            displacementVector = gazeVector - transform.position;
             transform.localScale = new Vector3(2 * Mathf.Tan((Experiment.FixationRad * Mathf.PI) / 180) * Stimulus.StimDepth, 0, 2 * Mathf.Tan(Experiment.FixationRad * Mathf.PI / 180) * Stimulus.StimDepth);
         }
 
@@ -49,7 +50,8 @@ public class FixationPositionUpdate : MonoBehaviour {
         if (Stimulus.GazeContingent)
         { UpdateWithGazePosition();
             angularError = 2*Mathf.Atan(displacementVector.magnitude /2*Stimulus.StimDepth)*180/Mathf.PI;
-            Debug.Log(angularError);
+            gameManager.angular_gaze_error = angularError;
+            //Debug.Log(angularError);
         }
 
         // Make the stimulus facing user

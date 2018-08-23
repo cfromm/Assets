@@ -18,6 +18,8 @@ public class GenerateStimulus : MonoBehaviour {
     public GameManager gameManager;
     private UnityAction spawnStim;
     private int direction;
+    public AudioClip onset_sound;
+    public AudioClip fixation_loss_sound;
 	
 	private float var_low;
 	public float var_high;
@@ -31,11 +33,13 @@ public class GenerateStimulus : MonoBehaviour {
     {
         EventManager.StartListening("spawnStim", spawnStim);
 		EventManager.StartListening("DestroyStim", DestroyStim);
+        //EventManager.StartListening("DestroyFixation", DestroyFixation);
     }
     public void OnDisable()
     {
         EventManager.StopListening("spawnStim", spawnStim);
 		EventManager.StopListening("DestroyStim", DestroyStim);
+        //EventManager.StopListening("DestroyFixation", DestroyFixation);
     }
 
 
@@ -118,7 +122,7 @@ public class GenerateStimulus : MonoBehaviour {
             stimComponent = thisStim.GetComponent<TextMesh>();
             stimComponent.text = stims[Random.Range(0, stims.Length)];
             stimComponent.color = new Color (0f, 0f, 0f, Random.Range(var_low, var_high));
-            StartCoroutine(RemoveAfterSeconds(Stimulus.Duration, thisStim));
+            //StartCoroutine(RemoveAfterSeconds(Stimulus.Duration, thisStim));
             return thisStim;
 		}
         if (Stimulus.Type == "d")
@@ -127,8 +131,8 @@ public class GenerateStimulus : MonoBehaviour {
             GameObject thisStim = (GameObject)Instantiate(Resources.Load("DotStimulus"));
             thisStim.gameObject.tag = "Stimulus";
             thisStim.GetComponent<DotStimScript>().max_angle = var_high; 
-            thisStim.SetActive(true);
-            StartCoroutine( RemoveAfterSeconds(Stimulus.Duration, thisStim) );
+
+            //StartCoroutine( RemoveAfterSeconds(Stimulus.Duration, thisStim) );
             return thisStim;
 
         }
@@ -141,12 +145,13 @@ public class GenerateStimulus : MonoBehaviour {
     }
 
 
-    public void DrawFixation()
+    public GameObject DrawFixation()
     {
-        fix_position = new Vector3(Experiment.X_Fixation, Experiment.Y_Fixation, Experiment.Z_Fixation);
+        //fix_position = new Vector3(Experiment.X_Fixation, Experiment.Y_Fixation, Experiment.Z_Fixation);
         fixationCross = (GameObject)Instantiate(Resources.Load("FixationDot"));
-        //fixationCross.transform.position = fix_position;
-        Invoke("DestroyFixation", Stimulus.Duration);
+        fixationCross.SetActive(false);
+        //Invoke("DestroyFixation", Stimulus.Duration);
+        return fixationCross;
     }
 
 	
@@ -157,8 +162,10 @@ public class GenerateStimulus : MonoBehaviour {
 	/// </summary>
     public void StimulusEvent()
     {
+        AudioSource audio = GetComponent<AudioSource>();
         thisStim = StimulusGenerator();
-        Invoke("DestroyStim", Stimulus.Duration);
+
+        //Invoke("DestroyStim", Stimulus.Duration);
         string requested = null;
         // after generating the stimulus, start waiting for user response	
         if (Stimulus.Type == "t")
@@ -186,14 +193,33 @@ public class GenerateStimulus : MonoBehaviour {
 
         }
 
-        AudioSource audio = GetComponent<AudioSource>();
-        audio.Play();
+        if (gameManager.angular_gaze_error < 0.9)
+        { 
+            thisStim.SetActive(true);
+            audio.clip = onset_sound;
+            audio.Play();
+        }
+        else {
+            //Invoke("DestroyFixation", 0.01f);
+            audio.clip = fixation_loss_sound;
+            audio.Play();
+            Debug.Log("Fixation Break");
+            gameManager.fixation_break = true;
+            return;
+
+        }
 
 		GameObject response_obj = GameObject.Find("ResponseModule");
 		response_obj.GetComponent<ResponseGetter>().SetResponseEvent(requested);
 
-        DrawFixation();
+
     }
 
+    public void Start()
+    {
+        fixationCross = DrawFixation();
+        fixationCross.SetActive(true);
+        
+    }
 }
 	
