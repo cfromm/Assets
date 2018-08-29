@@ -19,12 +19,13 @@ public class GameManager : MonoBehaviour {
     public int level_3 = Experiment.Stair3_Init;
     public int running_consecutive_correct_3 = 0;
     public bool generate_state;	// if the scene is ready to generate the next stimulus
-    public bool fixation;
+    //public bool fixation;
     public float angular_gaze_error;
     //private bool response_match; //whether the user response is correct
     public int trial_number = 0;
 	public bool trial_success = false;  //whether the user response is correct
-    public bool fixation_break = false; //whether the user breaks fixation during the trial
+    public bool fixation_break = false;
+    public bool waitingITI = false;//whether the user breaks fixation during the trial
     public bool stimulus_present = false;
     public Color current_color;
 	public string current_text;
@@ -94,7 +95,7 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
     public void AcceptSignal()
     {
-		if( generate_state ){
+		if( generate_state  && !fixation_break && !waitingITI){
 			trial_number += 1;
             current_staircase = UnityEngine.Random.Range(1, 4);
 			EventManager.TriggerEvent("spawnStim");
@@ -126,12 +127,12 @@ public class GameManager : MonoBehaviour {
             Debug.Log("Incorrect");
 			TrialCounter(0);
 		}
-        //if (brokeFixation)
-        //{
-        //    EventManager.TriggerEvent("DestroyStim");
-        //    generate_state = true;
-        //    stimulus_present = false;
-        //    Debug.Log("Trial not logged due to fixation loss"); }
+        if (brokeFixation)
+        {
+            EventManager.TriggerEvent("DestroyStim");
+            generate_state = true;
+            stimulus_present = false;
+            Debug.Log("Trial not logged due to fixation loss"); }
 	}
 	
 	/// <summary>
@@ -141,7 +142,7 @@ public class GameManager : MonoBehaviour {
 	/// <param name="isPoint">Does the user point at the stimulus</param>
 	public void UserResponse( bool isTrue, bool isPoint, bool isFixated )
 	{
-		trial_success = isTrue && isPoint;      
+		trial_success = isTrue && isPoint && isFixated;      
 		if( trial_success )
 		{
 			TrialCounter(2);
@@ -274,7 +275,7 @@ public class GameManager : MonoBehaviour {
             sounds.clip = complete_sound;
             sounds.Play();
 			Debug.Log("Experiment Complete.");
-            StopEditorPlayback();
+            //StopEditorPlayback();
             Application.Quit();
         }
     }
@@ -283,7 +284,7 @@ public class GameManager : MonoBehaviour {
     {
       if (Application.isEditor)
         { 
-        UnityEditor.EditorApplication.isPlaying = false;
+       // UnityEditor.EditorApplication.isPlaying = false;
         }
     }
 

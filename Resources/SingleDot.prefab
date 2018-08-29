@@ -57,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 07bcd4e0597eb0648b7a45624f2e0594, type: 2}
+  - {fileID: 2100000, guid: c3281be743548c948961f1bcf37fa9c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   current_direction: 0
   movement_angle: {x: 0, y: 0, z: 0, w: 0}
   movement_end: {x: 0, y: 0, z: 0}
-  speed: 0
+  speedApertureUnits: 0
   start_of_dot: 0
   start_of_stimulus: 0
   timeSinceStartup: 0

@@ -53,10 +53,11 @@ public class GenerateStimulus : MonoBehaviour {
 		gameManager.stimulus_present = false;
     }
 
-    private IEnumerator waitITI(float seconds, AudioSource source)
+    private IEnumerator waitITI(float seconds, AudioSource source, GameManager gameManager)
     {
         yield return new WaitForSecondsRealtime(seconds);
         Debug.Log("waiting for intertrial interval");
+        gameManager.waitingITI = false;
         thisStim.SetActive(true);
         source.clip = onset_sound;
         source.Play();
@@ -203,11 +204,13 @@ public class GenerateStimulus : MonoBehaviour {
 
         }
         
-        if (gameManager.angular_gaze_error < 100)
+        if (!gameManager.fixation_break)
         {
-            Debug.Log(gameManager.angular_gaze_error);
-            wait = waitITI(Stimulus.ITI, audio);
+            Debug.Log("Gaze Error is: " + gameManager.angular_gaze_error);
+            wait = waitITI(Stimulus.ITI, audio, gameManager);
+            gameManager.waitingITI = true;
             StartCoroutine(wait);
+            
 
 
         }
@@ -216,7 +219,8 @@ public class GenerateStimulus : MonoBehaviour {
             audio.clip = fixation_loss_sound;
             audio.Play();
             Debug.Log("Fixation Break");
-            gameManager.fixation_break = true;
+            //gameManager.fixation_break = true;
+          
             return;
 
         }

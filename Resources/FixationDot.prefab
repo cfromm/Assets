@@ -57,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 07bcd4e0597eb0648b7a45624f2e0594, type: 2}
+  - {fileID: 2100000, guid: c3281be743548c948961f1bcf37fa9c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,6 +96,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sizeinUnityUnits: {x: 0, y: 0, z: 0}
+  displacementVector: {x: 0, y: 0, z: 0}
+  gazeVector: {x: 0, y: 0, z: 0}
+  angularError: 0
+  gameManager: {fileID: 0}
 --- !u!136 &136165598526776984
 CapsuleCollider:
   m_ObjectHideFlags: 1

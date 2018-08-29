@@ -45,6 +45,10 @@ public class FixationPositionUpdate : MonoBehaviour {
 
     }
 
+    private void Awake()
+    {
+        gameManager = GameManager.instance; 
+    }
     void Update()
     {
        // angularError = smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth - transform.position;
@@ -53,7 +57,13 @@ public class FixationPositionUpdate : MonoBehaviour {
         { UpdateWithGazePosition();
             angularError = 2*Mathf.Sin((displacementVector.magnitude /2)/Stimulus.StimDepth)*180/Mathf.PI;
             gameManager.angular_gaze_error = angularError;
-            //Debug.Log(angularError);
+            if (angularError > Experiment.Fixation_zone)
+            { gameManager.fixation_break = true; }
+            else
+            {
+                gameManager.fixation_break = false;
+            }
+
         }
 
         // Make the stimulus facing user

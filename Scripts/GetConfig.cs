@@ -67,6 +67,8 @@ public class Experiment
     public static float Z_Fixation { get; set; }
     [JsonProperty("FixationRadiusDeg")]
     public static float FixationRad { get; set; }
+    [JsonProperty("ZoneOfFixation")]
+    public static float Fixation_zone { get; set; }
     [JsonProperty("Staricase1_Initial")]
     public static int Stair1_Init { get; set; }
     [JsonProperty("Staricase2_Initial")]
@@ -163,6 +165,11 @@ public class GetConfig: MonoBehaviour
         if (File.Exists(filePath))
         {
             string dataAsJson = File.ReadAllText(filePath);
+            //TextAsset dataAsJsonObj = Resources.Load<TextAsset>(configFileName);
+            //string dataAsJson = dataAsJsonObj.text;
+
+            Debug.Log(dataAsJson);
+            //string dataAsJson = Resources.Load(configFileName);
             Parameters all_params = JsonConvert.DeserializeObject<Parameters>(dataAsJson);
             all_params = null;
             //Uncomment below to view output in Unity console
