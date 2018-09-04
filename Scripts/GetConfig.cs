@@ -106,6 +106,8 @@ public class Stimulus
     public static float ITI { get; set; }
     [JsonProperty("Density")]
     public static float Density { get; set; }
+    [JsonProperty("PctNoiseDots")]
+    public static float PctNoiseDots { get; set; }
     [JsonProperty("SizeArcmin")]
     public static float DotSize { get; set; }
     [JsonProperty("SpeedInDegreesPerSec")]

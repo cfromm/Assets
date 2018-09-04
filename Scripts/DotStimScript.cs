@@ -35,7 +35,10 @@ public class DotStimScript : MonoBehaviour {
             dot.transform.localPosition = new Vector3(dot_position[0], 0, dot_position[1]);
             dot.transform.localScale = new Vector3(dot_diam_units/(2*ap_rad_units), 0, dot_diam_units/(2*ap_rad_units));
             dot.GetComponent<DotMotion>().current_angle = max_angle;
-            
+            if(Random.value <= ( Stimulus.PctNoiseDots/100))
+                { dot.GetComponent<DotMotion>().isNoise = true; }
+            else { dot.GetComponent<DotMotion>().isNoise = false; }
+
             dot.GetComponent<DotMotion>().current_direction = stim_direction;
             dot.SetActive(false);
             dots.Add(dot);

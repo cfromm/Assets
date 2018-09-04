@@ -12,6 +12,7 @@ public class DotMotion : MonoBehaviour {
     public float start_of_dot;
     public float start_of_stimulus;
     public float timeSinceStartup;
+    public bool isNoise;
 	// Use this for initialization
 
 	void Start () {
@@ -19,17 +20,22 @@ public class DotMotion : MonoBehaviour {
         speedApertureUnits = Stimulus.DotSpeed/(2*Stimulus.ApertureRad);// Aperture has scaled radius of 1 here, need to scale speed to use with local position
 
 
-        if (current_direction == 1) //left motion
+        if (current_direction == 1 && !isNoise) //left motion
         {
             movement_angle = Quaternion.AngleAxis(-Random.Range(-current_angle/2, current_angle/2), Vector3.up);
             transform.localRotation = Quaternion.identity * movement_angle;
             //Debug.Log("movement angle is " + movement_angle.eulerAngles);
         }
-        else //right motion
+        if( current_direction != 1 && ! isNoise) //right motion
         {
             movement_angle = Quaternion.AngleAxis(Random.Range(-current_angle/2, current_angle/2), Vector3.up);
             transform.localRotation = Quaternion.identity * movement_angle;
            // Debug.Log("movement angle is " + movement_angle.eulerAngles);
+        }
+        if (isNoise) 
+        {
+            movement_angle = Quaternion.AngleAxis(Random.Range(-360, 360), Vector3.up);
+            transform.localRotation = Quaternion.identity * movement_angle;
         }
         //GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
         

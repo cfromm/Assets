@@ -13,7 +13,7 @@
     "Y_Fixation": "1.5",
     "Z_Fixation": "0",
     "FixationRadiusDeg": "0.3",
-    "ZoneOfFixation":  "2",
+    "ZoneOfFixation":  "100",
     "horizontal_offset": "5",
     "vertical_offset": "-5",
     "z_offset": "0",
@@ -36,12 +36,13 @@
     "ApertureRad": "2.5",
     "InterTrialInterval": "2.0",
     "Density": "3.5",
+    "PctNoiseDots": "40",
     "SizeArcmin": "14",
     "SpeedInDegreesPerSec": "5",
     "IndividualLifetime": "0.25",
     "Directions": "Left,Right",
     "2Dor3D": "2",
-    "StimDepthMeters": "1.0"
+    "StimDepthMeters": "0.75"
   }
   
 }
