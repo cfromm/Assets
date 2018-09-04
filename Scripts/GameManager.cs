@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour {
     //private bool response_match; //whether the user response is correct
     public int trial_number = 0;
 	public bool trial_success = false;  //whether the user response is correct
-    public bool fixation_break = false;
-    public bool waitingITI = false;//whether the user breaks fixation during the trial
+    public bool fixation_break = false;//whether the user breaks fixation during the trial
+    public bool waitingITI = false;
     public bool stimulus_present = false;
     public Color current_color;
 	public string current_text;
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour {
     {
 		if( generate_state  && !fixation_break && !waitingITI){
 			trial_number += 1;
-            current_staircase = UnityEngine.Random.Range(1, 4);
+            current_staircase = UnityEngine.Random.Range(1, Experiment.Num_Staircases+1);
 			EventManager.TriggerEvent("spawnStim");
 			generate_state = false;
 			stimulus_present = true;

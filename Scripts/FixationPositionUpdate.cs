@@ -12,6 +12,8 @@ public class FixationPositionUpdate : MonoBehaviour {
     public Vector3 gazeVector;
     public float angularError;
     public GameManager gameManager = GameManager.instance;
+    public float fixation_timer;
+    public Renderer rend;
 
 
     // Use this for initialization
@@ -23,6 +25,8 @@ public class FixationPositionUpdate : MonoBehaviour {
         {
             transform.position = smiInstance.transform.position + fixationRaycast * 10;
         }
+        rend = GetComponent<Renderer>();
+        
     }
 
 
@@ -57,13 +61,29 @@ public class FixationPositionUpdate : MonoBehaviour {
         { UpdateWithGazePosition();
             angularError = 2*Mathf.Sin((displacementVector.magnitude /2)/Stimulus.StimDepth)*180/Mathf.PI;
             gameManager.angular_gaze_error = angularError;
-            if (angularError > Experiment.Fixation_zone)
-            { gameManager.fixation_break = true; }
-            else
+            if (angularError > Experiment.Fixation_zone && fixation_timer < Stimulus.FixationDuration)
+            {   gameManager.fixation_break = true;
+                rend.material.color = Color.black;
+                fixation_timer = 0;
+            }
+            if( angularError < Experiment.Fixation_zone  && fixation_timer < Stimulus.FixationDuration)
+            {
+                fixation_timer += 1/90f;
+                rend.material.color = Color.yellow;
+                gameManager.fixation_break = false;
+
+            }
+            if (fixation_timer > Stimulus.FixationDuration)
             {
                 gameManager.fixation_break = false;
+                rend.material.color = Color.black;
+                gameManager.GetComponent<GameManager>().AcceptSignal();
+                fixation_timer = 0;
             }
+            if (gameManager.stimulus_present) 
+            { fixation_timer = 0; }
 
+            
         }
 
         // Make the stimulus facing user

@@ -156,7 +156,9 @@ public class ResponseGetter : MonoBehaviour {
             gameManager.generate_state = true;
             gameManager.stimulus_present = false;
             gameManager.fixation_break = false;
-            Debug.Log("Trial not logged due to fixation loss");
+
+
+           // Debug.Log("Trial not logged due to fixation loss");
         }
     }
 	}

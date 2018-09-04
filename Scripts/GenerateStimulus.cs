@@ -13,7 +13,7 @@ public class GenerateStimulus : MonoBehaviour {
     public Vector3 stim_position;
     public Vector3 fix_position;
     public GameObject thisStim = null;
-    public GameObject fixationCross;
+    public GameObject fixation_dot;
     public string[] stims;
     public GameManager gameManager;
     private UnityAction spawnStim;
@@ -53,14 +53,18 @@ public class GenerateStimulus : MonoBehaviour {
 		gameManager.stimulus_present = false;
     }
 
-    private IEnumerator waitITI(float seconds, AudioSource source, GameManager gameManager)
+    private IEnumerator waitITI(float seconds_iti, float seconds_stim, GameObject fixation, GameManager gameManager)
     {
-        yield return new WaitForSecondsRealtime(seconds);
+       
         Debug.Log("waiting for intertrial interval");
+        gameManager.waitingITI = true;
+        yield return new WaitForSecondsRealtime(seconds_stim);
+        fixation.SetActive(false);
+        yield return new WaitForSecondsRealtime(seconds_iti- seconds_stim);
         gameManager.waitingITI = false;
-        thisStim.SetActive(true);
-        source.clip = onset_sound;
-        source.Play();
+        fixation.SetActive(true);
+
+
     }
 
 
@@ -77,8 +81,8 @@ public class GenerateStimulus : MonoBehaviour {
 	}
     private void DestroyFixation()
     {
-        if (fixationCross != null)
-        { Destroy(fixationCross); }
+        if (fixation_dot != null)
+        { Destroy(fixation_dot); }
     }
 
 	/// <summary>
@@ -159,10 +163,10 @@ public class GenerateStimulus : MonoBehaviour {
     public GameObject DrawFixation()
     {
         //fix_position = new Vector3(Experiment.X_Fixation, Experiment.Y_Fixation, Experiment.Z_Fixation);
-        fixationCross = (GameObject)Instantiate(Resources.Load("FixationDot"));
-        fixationCross.SetActive(false);
+        fixation_dot = (GameObject)Instantiate(Resources.Load("FixationDot"));
+        fixation_dot.SetActive(false);
         //Invoke("DestroyFixation", Stimulus.Duration);
-        return fixationCross;
+        return fixation_dot;
     }
 
 	
@@ -207,10 +211,13 @@ public class GenerateStimulus : MonoBehaviour {
         if (!gameManager.fixation_break)
         {
             Debug.Log("Gaze Error is: " + gameManager.angular_gaze_error);
-            wait = waitITI(Stimulus.ITI, audio, gameManager);
-            gameManager.waitingITI = true;
+            thisStim.SetActive(true);
+            audio.clip = onset_sound;
+            audio.Play();
+            wait = waitITI(Stimulus.ITI, Stimulus.Duration, fixation_dot, gameManager);
+            gameManager.waitingITI = false;
             StartCoroutine(wait);
-            
+            //gameManager.waitingITI = false;
 
 
         }
@@ -233,8 +240,8 @@ public class GenerateStimulus : MonoBehaviour {
 
     public void Start()
     {
-        fixationCross = DrawFixation();
-        fixationCross.SetActive(true);
+        fixation_dot = DrawFixation();
+        fixation_dot.SetActive(true);
         
     }
 }
