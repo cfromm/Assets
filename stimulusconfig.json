@@ -1,7 +1,7 @@
 {
   "Experiment_Params": {
     "SubjectInitials": "CAF",
-    "InputMethod": "s",
+    "InputMethod": "c",
     "SaveBool": "true",
     "WriteTrialData": "true",
     "WriteFrameData": "false",
