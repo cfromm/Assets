@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
 	public string current_text;
     public string current_angle;
     public string current_direction;
+    public Vector3 fixation_location;
     public bool ExperimentComplete = false;
 	private float stimStartTime;
     public AudioClip success_sound;

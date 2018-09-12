@@ -85,6 +85,27 @@ public class GenerateStimulus : MonoBehaviour {
         { Destroy(fixation_dot); }
     }
 
+    private Vector3 validFixationPick()
+    {
+        if (Experiment.Fixation_Roving) // picks a new fixation location each trial
+        {
+            Vector3 fixation_pick = new Vector3(Random.Range(-Experiment.Roving_outer_vertical, Experiment.Roving_outer_vertical), Random.Range(-Experiment.Roving_outer_horizontal, Experiment.Roving_outer_horizontal), 0);
+            while (gameManager.fixation_location.magnitude - Experiment.Roving_step < fixation_pick.magnitude && fixation_pick.magnitude <  gameManager.fixation_location.magnitude + Experiment.Roving_step )
+            {
+                //need to fix this to include absolute value and length instead of components.
+                fixation_pick = new Vector3(Random.Range(-Experiment.Roving_outer_vertical, Experiment.Roving_outer_vertical), Random.Range(-Experiment.Roving_outer_horizontal, Experiment.Roving_outer_horizontal), 0);
+            }
+            Debug.Log(fixation_pick);
+            return fixation_pick;
+            
+        }
+        
+        else
+        {
+            return new Vector3(0, 0, 0);
+        }
+    }
+
 	/// <summary>
 	/// This function sets the color range of the stimulus
 	/// </summary>
@@ -117,6 +138,9 @@ public class GenerateStimulus : MonoBehaviour {
             var_high = float.Parse(angles[gameManager.current_level]);
             gameManager.current_angle = var_high.ToString();
         }
+        gameManager.fixation_location = validFixationPick();
+                
+        
 	}
     
 	/// <summary>

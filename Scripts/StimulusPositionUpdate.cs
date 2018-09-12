@@ -5,6 +5,7 @@ using UnityEngine;
 public class StimulusPositionUpdate : MonoBehaviour {
     SMI.SMIEyeTrackingUnity smiInstance = null;
     Vector3 cameraRaycast;
+    Vector3 basePoint;
 	Quaternion offsets;
     public Vector3 sizeinUnityUnits;
 	
@@ -28,9 +29,20 @@ public class StimulusPositionUpdate : MonoBehaviour {
     void UpdateWithGazePosition()
     {
         cameraRaycast = smiInstance.transform.rotation * offsets * smiInstance.smi_GetCameraRaycast();
+        basePoint = smiInstance.transform.position;
+        if(Experiment.Monocular == "r")
+        {
+            cameraRaycast = smiInstance.transform.rotation * offsets * smiInstance.smi_GetRightGazeDirection();
+            basePoint = smiInstance.smi_GetRightGazeBase() + smiInstance.transform.position;
+        }
+        if (Experiment.Monocular == "l")
+        {
+            cameraRaycast = smiInstance.transform.rotation * offsets * smiInstance.smi_GetLeftGazeDirection();
+            basePoint = smiInstance.smi_GetLeftGazeBase() + smiInstance.transform.position;
+        }
         //cameraRaycast =  smiInstance.transform.forward;
-		if( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
-            transform.position = smiInstance.transform.position + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
+        if ( !float.IsNaN(cameraRaycast.x) && !float.IsNaN(cameraRaycast.y) && !float.IsNaN(cameraRaycast.z) ){
+            transform.position = basePoint + cameraRaycast * Stimulus.StimDepth; //scales magnitude of position by desired value
             //transform.position = new Vector3 (smiInstance.transform.position.x + Stimulus.StimDepth, smiInstance.transform.position.y , smiInstance.transform.position.z );
             //transform.rotation = smiInstance.transform.rotation;
             transform.localScale = new Vector3(2*Mathf.Tan((Stimulus.ApertureRad*Mathf.PI)/180) * Stimulus.StimDepth, 0, 2*Mathf.Tan(Stimulus.ApertureRad * Mathf.PI / 180) * Stimulus.StimDepth);
@@ -43,7 +55,9 @@ public class StimulusPositionUpdate : MonoBehaviour {
 		
         //set up size conversions to degrees here
         if (Stimulus.GazeContingent)
-        { UpdateWithGazePosition(); }
+        {
+            UpdateWithGazePosition();
+        }
 
         // Make the stimulus facing user
         if (smiInstance != null)

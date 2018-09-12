@@ -53,6 +53,8 @@ public class Experiment
     public static int Num_Levels { get; set; }
     [JsonProperty("Trials")]
     public static int Trials { get; set; }
+    [JsonProperty("BackgroundColor")]
+    public static string BackgroundColor { get; set; }
     [JsonProperty("vertical_offset")]
     public static float X_offset { get; set; }
     [JsonProperty("horizontal_offset")]
@@ -69,6 +71,16 @@ public class Experiment
     public static float FixationRad { get; set; }
     [JsonProperty("ZoneOfFixation")]
     public static float Fixation_zone { get; set; }
+    [JsonProperty("Fixation_Roving")]
+    public static bool Fixation_Roving { get; set; }
+    [JsonProperty("Roving_outer_vertical")]
+    public static float Roving_outer_vertical { get; set; }
+    [JsonProperty("Roving_outer_horizontal")]
+    public static float Roving_outer_horizontal { get; set; }
+    [JsonProperty("Roving_step")]
+    public static float Roving_step { get; set; }
+    [JsonProperty("Monocular")]
+    public static string Monocular { get; set; }
     [JsonProperty("Total_Staircases")]
     public static int Num_Staircases { get; set; }
     [JsonProperty("Staricase1_Initial")]
