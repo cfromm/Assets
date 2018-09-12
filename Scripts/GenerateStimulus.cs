@@ -60,6 +60,7 @@ public class GenerateStimulus : MonoBehaviour {
         gameManager.waitingITI = true;
         yield return new WaitForSecondsRealtime(seconds_stim);
         fixation.SetActive(false);
+        gameManager.fixation_location = validFixationPick();
         yield return new WaitForSecondsRealtime(seconds_iti- seconds_stim);
         gameManager.waitingITI = false;
         fixation.SetActive(true);
@@ -82,7 +83,8 @@ public class GenerateStimulus : MonoBehaviour {
     private void DestroyFixation()
     {
         if (fixation_dot != null)
-        { Destroy(fixation_dot); }
+        { Destroy(fixation_dot);
+        }
     }
 
     private Vector3 validFixationPick()
@@ -138,7 +140,7 @@ public class GenerateStimulus : MonoBehaviour {
             var_high = float.Parse(angles[gameManager.current_level]);
             gameManager.current_angle = var_high.ToString();
         }
-        gameManager.fixation_location = validFixationPick();
+        
                 
         
 	}

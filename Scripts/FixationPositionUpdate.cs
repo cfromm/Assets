@@ -46,7 +46,8 @@ public class FixationPositionUpdate : MonoBehaviour {
 
             if (Experiment.Monocular == "r")
             {
-                fixationRaycast = smiInstance.smi_GetRightGazeBase()+ fixation_location * smiInstance.transform.forward ;
+                //fixationRaycast = smiInstance.smi_GetRightGazeBase()+ smiInstance.transform.rotation* fixation_location * smiInstance.transform.forward ;
+                fixationRaycast = smiInstance.smi_GetRightGazeBase() + smiInstance.transform.rotation * fixation_location * Vector3.forward;
                 transform.position = smiInstance.transform.position + smiInstance.smi_GetRightGazeBase() + fixation_location * smiInstance.transform.forward * Stimulus.StimDepth;
                 Debug.DrawRay(smiInstance.transform.position + smiInstance.smi_GetRightGazeBase(), smiInstance.transform.forward * Stimulus.StimDepth, Color.yellow);
                 gazeVector = (smiInstance.transform.position +(smiInstance.transform.rotation *  (smiInstance.smi_GetRightGazeBase() + smiInstance.smi_GetRightGazeDirection()) * Stimulus.StimDepth));
@@ -55,7 +56,8 @@ public class FixationPositionUpdate : MonoBehaviour {
             }
             if (Experiment.Monocular == "l")
             {
-                fixationRaycast =  smiInstance.smi_GetLeftGazeBase()+ fixation_location* smiInstance.transform.forward ;
+                //fixationRaycast =  smiInstance.smi_GetLeftGazeBase()+ fixation_location* smiInstance.transform.forward ;
+                fixationRaycast = smiInstance.smi_GetLeftGazeBase() + smiInstance.transform.rotation * fixation_location * Vector3.forward;
                 transform.position = smiInstance.transform.position + smiInstance.smi_GetLeftGazeBase() + fixation_location * smiInstance.transform.forward * Stimulus.StimDepth;
                 //Debug.Log(transform.position);
                 Debug.DrawRay(smiInstance.transform.position + smiInstance.transform.rotation * (smiInstance.smi_GetLeftGazeBase()), smiInstance.transform.forward*Stimulus.StimDepth, Color.yellow);
@@ -65,7 +67,8 @@ public class FixationPositionUpdate : MonoBehaviour {
             }
             if (Experiment.Monocular == "b")
             {
-                fixationRaycast = fixation_location * smiInstance.transform.forward;
+                //fixationRaycast = fixation_location * smiInstance.transform.forward;
+                fixationRaycast =  smiInstance.transform.rotation * fixation_location * Vector3.forward;
                 Debug.DrawRay(smiInstance.transform.position, fixation_location * smiInstance.transform.forward * Stimulus.StimDepth, Color.yellow);
                 transform.position = smiInstance.transform.position + fixationRaycast * Stimulus.StimDepth;
                 gazeVector = smiInstance.transform.position + smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth;
