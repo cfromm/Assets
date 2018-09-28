@@ -95,7 +95,7 @@ public class ResponseGetter : MonoBehaviour {
                 Debug.Log("User entered: " + user_resp);
 
                 bool isTrue = true_val.Equals(user_resp);
-                gameManager.UserResponse(isTrue, gameManager.fixation_break);
+                gameManager.UserResponse(isTrue, gameManager.fixation_break, gameManager);
 
                 // Finish judging, no longer waiting for response
                 ResetMonitorParam();
@@ -107,7 +107,7 @@ public class ResponseGetter : MonoBehaviour {
             if (isTouch == true)
             {
                 // If user points at stimulus, pass true to game manager.
-                gameManager.UserResponse(isTouch, isPoint);
+                gameManager.UserResponse(isTouch, isPoint, gameManager.fixation_break);
                 ResetMonitorParam();
             }
 
@@ -121,11 +121,11 @@ public class ResponseGetter : MonoBehaviour {
                         (true_val.Equals("Left") && user_direction[2]) ||
                         (true_val.Equals("Right") && user_direction[3]))
                     {
-                        gameManager.UserResponse(true, gameManager.fixation_break);
+                        gameManager.UserResponse(true, gameManager.fixation_break, gameManager);
                     }
                     else
                     {
-                        gameManager.UserResponse(false, gameManager.fixation_break);
+                        gameManager.UserResponse(false, gameManager.fixation_break, gameManager);
                     }
                     ResetMonitorParam();
                 }
@@ -141,11 +141,11 @@ public class ResponseGetter : MonoBehaviour {
                         (true_val.Equals("Left") && user_direction[2]) ||
                         (true_val.Equals("Right") && user_direction[3]))
                     {
-                        gameManager.UserResponse(true, isPoint);
+                        gameManager.UserResponse(true, isPoint, gameManager.fixation_break);
                     }
                     else
                     {
-                        gameManager.UserResponse(false, isPoint);
+                        gameManager.UserResponse(false, isPoint, gameManager.fixation_break);
                     }
 
                     ResetMonitorParam();
@@ -161,11 +161,11 @@ public class ResponseGetter : MonoBehaviour {
                         (true_val.Equals("Left") && user_direction[2]) ||
                         (true_val.Equals("Right") && user_direction[3]))
                     {
-                        gameManager.UserResponse(true, gameManager.fixation_break);
+                        gameManager.UserResponse(true, gameManager.fixation_break, gameManager);
                     }
                     else
                     {
-                        gameManager.UserResponse(false, gameManager.fixation_break);
+                        gameManager.UserResponse(false, gameManager.fixation_break, gameManager);
                     }
 
                     ResetMonitorParam();
@@ -189,6 +189,7 @@ public class ResponseGetter : MonoBehaviour {
             gameManager.generate_state = true;
             gameManager.stimulus_present = false;
             gameManager.fixation_break = false;
+            
 
 
            // Debug.Log("Trial not logged due to fixation loss");

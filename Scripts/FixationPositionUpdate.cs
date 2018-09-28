@@ -69,14 +69,14 @@ public class FixationPositionUpdate : MonoBehaviour {
             {
                 //fixationRaycast = fixation_location * smiInstance.transform.forward;
                 fixationRaycast =  smiInstance.transform.rotation * fixation_location * Vector3.forward;
-                Debug.DrawRay(smiInstance.transform.position, fixation_location * smiInstance.transform.forward * Stimulus.StimDepth, Color.yellow);
+                //Debug.DrawRay(smiInstance.transform.position, fixation_location * smiInstance.transform.forward * Stimulus.StimDepth, Color.yellow);
                 transform.position = smiInstance.transform.position + fixationRaycast * Stimulus.StimDepth;
                 gazeVector = smiInstance.transform.position + smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth;
-                Debug.DrawRay(smiInstance.transform.position + smiInstance.transform.rotation * (smiInstance.smi_GetRightGazeBase()), smiInstance.transform.rotation * smiInstance.smi_GetRightGazeDirection() * Stimulus.StimDepth, Color.magenta);
-                Debug.DrawRay(smiInstance.transform.position + smiInstance.transform.rotation * (smiInstance.smi_GetLeftGazeBase()), smiInstance.transform.rotation * smiInstance.smi_GetLeftGazeDirection() * Stimulus.StimDepth, Color.cyan);
+                Debug.DrawRay(smiInstance.transform.position + smiInstance.transform.rotation * (smiInstance.smi_GetRightGazeBase()), smiInstance.transform.rotation * smiInstance.smi_GetRightGazeDirection() * Stimulus.StimDepth, Color.red);
+                Debug.DrawRay(smiInstance.transform.position + smiInstance.transform.rotation * (smiInstance.smi_GetLeftGazeBase()), smiInstance.transform.rotation * smiInstance.smi_GetLeftGazeDirection() * Stimulus.StimDepth, Color.red);
             }
         }
-            Debug.DrawRay(smiInstance.transform.position, smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth, Color.green);
+            Debug.DrawRay(smiInstance.transform.position, smiInstance.transform.rotation * smiInstance.smi_GetCameraRaycast() * Stimulus.StimDepth , Color.blue);
             //Debug.Log(smiInstance.smi_GetRightGazeBase());
             //transform.position = smiInstance.transform.position + fixationRaycast * Stimulus.StimDepth;
             

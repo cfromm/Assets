@@ -56,11 +56,13 @@ public class GameManager : MonoBehaviour {
 	[Tooltip("Press to start/stop recording SMI eye tracker data.")]
     [SerializeField]
     KeyCode trigger1 = KeyCode.Space;
+    String jsonParams;
 	FileStream streams;
 	FileStream trialStreams;
 	StringBuilder stringBuilder = new StringBuilder();
 	String writeString;		
 	Byte[] writebytes;
+    Byte[] writejson;
 	bool startWrite = false;
 	
 
@@ -97,7 +99,7 @@ public class GameManager : MonoBehaviour {
     public void AcceptSignal()
     {
 		if( generate_state  && !fixation_break && !waitingITI){
-			trial_number += 1;
+			
             current_staircase = UnityEngine.Random.Range(1, Experiment.Num_Staircases+1);
 			EventManager.TriggerEvent("spawnStim");
 			generate_state = false;
@@ -105,12 +107,12 @@ public class GameManager : MonoBehaviour {
 			stimStartTime = Time.time * 1000;
 		}		
     }
-	
-	/// <summary>
-	/// This function is called after the user answers
-	/// </summary>
-	/// <param name="isTrue">Does the user response match the stimulus</param>
-	public void UserResponse( bool isTrue, bool brokeFixation)
+
+    /// <summary>
+    /// This function is called after the user answers
+    /// </summary>
+    /// <param name="isTrue">Does the user response match the stimulus</param>
+    public void UserResponse(bool isTrue, bool brokeFixation, GameManager gameManager)
     {
         AudioSource sounds = GetComponent<AudioSource>();
         trial_success = isTrue;
@@ -120,19 +122,22 @@ public class GameManager : MonoBehaviour {
             sounds.Play();
             TrialCounter(1);
             Debug.Log("Correct!");
-		} 
+            gameManager.trial_number += 1;
+        } 
         if(!trial_success && !brokeFixation)
 		{
             sounds.clip = fail_sound;
             sounds.Play();
             Debug.Log("Incorrect");
 			TrialCounter(0);
-		}
+            gameManager.trial_number += 1;
+        }
         if (brokeFixation)
         {
             EventManager.TriggerEvent("DestroyStim");
             generate_state = true;
             stimulus_present = false;
+            //gameManager.trial_number -= 1; 
             Debug.Log("Trial not logged due to fixation loss"); }
 	}
 	
@@ -307,6 +312,7 @@ public class GameManager : MonoBehaviour {
 
             // create a file inside the folder based on the current time
             String outFileName = Path.Combine(outputDir, DateTime.Now.ToString("yyyy-MM-dd-HH-mm") + "_Parameters.txt");
+            
             streams = new FileStream(outFileName, FileMode.Create, FileAccess.Write);
 
             // create another file to record trial results
@@ -345,7 +351,10 @@ public class GameManager : MonoBehaviour {
             );
         writeString = stringBuilder.ToString();
         writebytes = Encoding.ASCII.GetBytes(writeString);
+        jsonParams = File.ReadAllText(Path.Combine(Application.dataPath, "stimulusconfig.json"));
+        writejson = Encoding.ASCII.GetBytes(jsonParams);
         streams.Write(writebytes, 0, writebytes.Length);
+        streams.Write(writejson, 0, writejson.Length);
 		
 		// trial output file
 		stringBuilder.Length = 0;
