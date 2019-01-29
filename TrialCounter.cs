@@ -8,23 +8,37 @@ public class TrialCounter : MonoBehaviour {
     public GameManager gameManager = GameManager.instance;
     public Vector3 visualFieldLocation;
     public TextMesh count;
+    public float running_pct_correct; 
     // Use this for initialization
     private void Awake()
     {
         //gameManager = GameManager.instance;
     }
     void Start () {
-        visualFieldLocation.Set(-15, 15, 0);
+        visualFieldLocation.Set(15, 15, 0);
         smiInstance = SMI.SMIEyeTrackingUnity.Instance;
         //count = GetComponent<TextMesh>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        count.text = gameManager.trial_number.ToString();
+        if (gameManager.trial_number != 0)
+        {
+
+            running_pct_correct = Mathf.Round((float)gameManager.total_correct /(float)gameManager.trial_number * 100);
+        }
+        else
+        { running_pct_correct = 0; }
+
+        count.text = running_pct_correct.ToString()+'%';
+        if (gameManager.trial_success)
+            {count.color = Color.green; }
+        else
+        { count.color = Color.red;  }
         count.characterSize = 1;
         transform.LookAt(smiInstance.transform);
-        transform.rotation *= Quaternion.Euler(0, 180, 0);
-        transform.position =   smiInstance.transform.position + Quaternion.Euler(visualFieldLocation) *smiInstance.transform.forward* Stimulus.StimDepth;
-	}
+        transform.localRotation = Quaternion.Euler(0, 0, 0); 
+        transform.position =   smiInstance.transform.position + smiInstance.transform.rotation * Quaternion.Euler(visualFieldLocation) * Vector3.forward*Stimulus.StimDepth;
+
+    }
 }

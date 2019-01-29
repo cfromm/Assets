@@ -53,7 +53,7 @@ public class DotMotion : MonoBehaviour {
             
             if ((Time.realtimeSinceStartup) < Stimulus.DotLife + start_of_dot)
             {
-                float deltaT = 1 / 90f; //change this after debugging
+                //float deltaT = 1 / 90f; //change this after debugging
                 if (current_direction == 1)
                 {
                     transform.Translate(Vector3.right * speedApertureUnits * Time.deltaTime * transform.parent.localScale.x, Space.Self);

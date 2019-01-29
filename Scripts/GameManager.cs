@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour {
     public float angular_gaze_error;
     //private bool response_match; //whether the user response is correct
     public int trial_number = 0;
+    public int total_correct = 0;
 	public bool trial_success = false;  //whether the user response is correct
     public bool fixation_break = false;//whether the user breaks fixation during the trial
     public bool waitingITI = false;
@@ -120,6 +121,7 @@ public class GameManager : MonoBehaviour {
 		{
             sounds.clip = success_sound;
             sounds.Play();
+            total_correct += 1;
             TrialCounter(1);
             Debug.Log("Correct!");
             gameManager.trial_number += 1;
@@ -265,7 +267,7 @@ public class GameManager : MonoBehaviour {
             (
                 trial_number + "\t\t" + stimStartTime + "\t" + Time.time * 1000 + "\t" +
                 current_angle + "\t"  + current_staircase + "\t\t" +
-                trial_success + Environment.NewLine
+                trial_success + "\t\t" + fixation_location + "\t\t" + angular_gaze_error  + Environment.NewLine
             );
         }
         if (SaveBool)
@@ -371,7 +373,7 @@ public class GameManager : MonoBehaviour {
         if (Stimulus.Type == "d")
             {
                 stringBuilder.Append(
-                    "TrialNumber\t" +"StartTime\t" + "EndTime\t"+ "CoherenceAngle\t" + "StaircaseNumber\t" + "Response\t" + Environment.NewLine
+                    "TrialNumber\t" +"StartTime\t" + "EndTime\t"+ "CoherenceAngle\t" + "StaircaseNumber\t" + "Response\t" + "FixationLocation\t" + "GazeError" + Environment.NewLine
                     );
             }
 		else{
