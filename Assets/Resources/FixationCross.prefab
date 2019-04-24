@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 23278241728625290}
   - component: {fileID: 102150906087647770}
   - component: {fileID: 65853916885546068}
+  - component: {fileID: 114856094619095568}
   m_Layer: 0
   m_Name: FixationCross
   m_TagString: Untagged
@@ -36,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1385603456798696}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 10, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -109,3 +110,15 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190335
+--- !u!114 &114856094619095568
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1385603456798696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6696c5655e0f6b74fbac4f22edc7a2ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeinUnityUnits: {x: 0, y: 0, z: 0}

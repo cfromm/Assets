@@ -1,25 +1,56 @@
 {
   "Experiment_Params": {
-    "InputMethod" : "pc",
+    "SubjectInitials": "RHD",
+    "InputMethod": "s",
+    "SaveBool": "true",
+    "WriteTrialData": "true",
+    "WriteFrameData": "false",
     "SaveLocation": "D:\\Data\\CBRecoveryVive\\",
-    "Staircase": "3",
-    "Trials": "20",
-    "Num_Levels": "4",
+    "Staircase_ratio": "3",
+    "Trials": "200",
+    "BackgroundColor": "0.5,0.5,0.5,1",
+    "Num_Levels": "10",
     "X_Fixation": "0",
     "Y_Fixation": "0",
     "Z_Fixation": "0",
-    "x_offset": "10",
-    "y_offset": "2",
+    "FixationRadiusDeg": "0.3",
+    "ZoneOfFixation": "2",
+    "Fixation_Roving": "false",
+    "Roving_outer_vertical": "10",
+    "Roving_outer_horizontal": "10",
+    "Roving_step": "5",
+    "Monocular": "b",
+    "horizontal_offset": "5",
+    "vertical_offset": "-5",
     "z_offset": "0",
-    "Pause_time": "1"
+    "Pause_time": "1",
+    "Total_Staircases": "1",
+    "Staircase1_Initial": "0",
+    "Staircase2_Initial": "3",
+    "Staircase3_Initial": "5",
+    "InputPadAxis": "horizontal",
+    "LevelOrPct": "l"
   },
   "Stimulus_Params": {
-    "Type": "t",
+    "Type": "d",
     "Letter": "E,H,F,R,B,P",
     "Height": "0.5",
     "Max_Color": "1",
-    "Duration": "3",
-    "GazeContingent": "true"
+    "Duration": "0.5",
+    "GazeContingent": "true",
+    "FixationDurationRequired": "1.0",
+    "Angle": "0,40,80,120,160,200,240,280,320,355",
+    "ApertureRad": "2.5",
+    "InterTrialInterval": "1.5",
+    "Density": "3.5",
+    "PctNoiseDots": "50",
+    "SizeArcmin": "14",
+    "SpeedInDegreesPerSec": "10",
+    "IndividualLifetime": "0.25",
+    "Directions": "Left, Right",
+    "2Dor3D": "2",
+    "StimDepthMeters": "1.5"
   }
-  
+
 }
+  

@@ -21,7 +21,8 @@ public class ControllerHandler : SteamVR_TrackedController {
 	private ResponseGetter response_script;
 	private Vector2 touchPos;
 	private Vector2 unTouchPos;
-	
+    private Vector2 clickPos;
+
 	/// <summary>
 	/// This function tells game manager to generate stimulus
 	/// </summary>
@@ -38,16 +39,20 @@ public class ControllerHandler : SteamVR_TrackedController {
 	
 	public override void OnPadClicked(ClickedEventArgs e)
 	{
-		base.OnPadClicked(e);
-		
-		response_script.GetTouchResponse(true);
+        if (Experiment.InputMethod == "c")
+        {
+            base.OnPadClicked(e);
+            clickPos.x = e.padX;
+            clickPos.y = e.padY;
+        }
+		//response_script.GetTouchResponse(true);
 	}
 	
 	public override void OnPadUnclicked(ClickedEventArgs e)
 	{
 		base.OnPadUnclicked(e);
-		
-		response_script.GetTouchResponse(false);
+        DeterminePadLocationClick();
+        //response_script.GetTouchResponse(false);
 	}
 	
 	/// <summary>
@@ -55,11 +60,14 @@ public class ControllerHandler : SteamVR_TrackedController {
 	/// </summary>
 	public override void OnPadTouched(ClickedEventArgs e)
 	{
-		base.OnPadTouched(e);
-		
-		touchPos.x = e.padX;
-		touchPos.y = e.padY;
-	}
+        if (Experiment.InputMethod == "s")
+        {
+            base.OnPadTouched(e);
+
+            touchPos.x = e.padX;
+            touchPos.y = e.padY;
+        }
+    }
 	
 	/// <summary>
 	/// This function records the position where user leaves pad
@@ -70,7 +78,7 @@ public class ControllerHandler : SteamVR_TrackedController {
 		
 		unTouchPos.x = controllerState.rAxis0.x;
 		unTouchPos.y = controllerState.rAxis0.y;
-		DeterminPadDirection();
+		DeterminPadDirectionSwipe();
 	}
 
     // Use this for initialization
@@ -93,8 +101,10 @@ public class ControllerHandler : SteamVR_TrackedController {
 	/// <summary>
 	/// This function determines the direction where user swipes the pad
 	/// </summary>
-	public void DeterminPadDirection(){
+	public void DeterminPadDirectionSwipe(){
 		Vector2 direction = unTouchPos - touchPos;
+
+        if (Experiment.InputAxis == "vertical")
 		if( direction.y > 0.3 ){
 			Debug.Log("Up");
 			response_script.GetSwipeResponse(0);
@@ -102,13 +112,49 @@ public class ControllerHandler : SteamVR_TrackedController {
 			Debug.Log("Down");
 			response_script.GetSwipeResponse(1);
 		}
-		if( direction.x < -0.3 ){
-			Debug.Log("Left");
-			response_script.GetSwipeResponse(2);
-		} else if( direction.x > 0.3 ){
-			Debug.Log("Right");
-			response_script.GetSwipeResponse(3);
-		}
+        if (Experiment.InputAxis == "horizontal")
+        {
+            if (direction.x < -0.3)
+            {
+                Debug.Log("User entered: Left");
+                response_script.GetSwipeResponse(2);
+            }
+            else if (direction.x > 0.3)
+            {
+                Debug.Log("User entered: Right");
+                response_script.GetSwipeResponse(3);
+            }
+        }
 	}
+    public void DeterminePadLocationClick()
+    {
+        Vector2 location = clickPos;
+        if(Experiment.InputAxis == "vertical")
+        {
+            if (location.y < 0)
+            {
+                Debug.Log("User entered: Down:");
+                response_script.GetClickResponse(0);
+            }
+            else
+            {
+                Debug.Log("User entered: Up");
+                response_script.GetClickResponse(1);
+            }
+        }
+        if (Experiment.InputAxis == "horizontal")
+        {
+            if (location.x < 0)
+            {
+                Debug.Log("User entered: Left");
+                response_script.GetSwipeResponse(2);
+            }
+            else
+            {
+                Debug.Log("User entered: Right");
+                response_script.GetSwipeResponse(3);
+            }
+        }
+    }
 	
 }
