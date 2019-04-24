@@ -1,0 +1,25 @@
+{
+  "Experiment_Params": {
+    "InputMethod" : "pc",
+    "SaveLocation": "D:\\Data\\CBRecoveryVive\\",
+    "Staircase": "3",
+    "Trials": "20",
+    "Num_Levels": "4",
+    "X_Fixation": "0",
+    "Y_Fixation": "0",
+    "Z_Fixation": "0",
+    "x_offset": "10",
+    "y_offset": "2",
+    "z_offset": "0",
+    "Pause_time": "1"
+  },
+  "Stimulus_Params": {
+    "Type": "t",
+    "Letter": "E,H,F,R,B,P",
+    "Height": "0.5",
+    "Max_Color": "1",
+    "Duration": "3",
+    "GazeContingent": "true"
+  }
+  
+}
