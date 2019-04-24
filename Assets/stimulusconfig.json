@@ -50,7 +50,13 @@
     "Directions": "Left, Right",
     "2Dor3D": "2",
     "StimDepthMeters": "1.5"
-  }
+  },
 
+  "AuditoryGen": {
+  	  "sampleRate": "44100",
+	  "clipLength_s": "5",
+	  "pulseFreq_Hz": "2",
+	  "duty_cycle": "0.41",
+  }
 }
   

@@ -136,6 +136,19 @@ public class Stimulus
     public static float StimDepth { get; set; }
 }
 
+public class AuditoryGen
+{
+    [JsonProperty("sampleRate")]
+    public static int sampleRate { get; set; }
+    [JsonProperty("clipLength_s")]
+    public static float clipLength_s { get; set; }
+    [JsonProperty("pulseFreq_Hz")]
+    public static float pulseFreq_Hz { get; set; }
+    [JsonProperty("duty_cycle")]
+    public static float duty_cycle { get; set; }
+
+}
+
 /*
 // Comparison article: https://jacksondunstan.com/articles/3714
 // JsonUtility does not support properties, {get; set;} need to be removed,

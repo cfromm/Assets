@@ -7,6 +7,10 @@ TagManager:
   - projectile
   - Stimulus
   - FxTemporaire
+  - Room
+  - Parameter
+  - Left
+  - Right
   layers:
   - Default
   - TransparentFX
@@ -16,9 +20,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - RS3D_Audio
+  - RS3D_Occluders
+  - RS3D_VirtualRoom
   - 
   - 
   - 
